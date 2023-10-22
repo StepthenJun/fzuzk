@@ -1,0 +1,13 @@
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://localhost:3306/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: root
+    password: 20040816Ywj
+mybatis-plus:
+  mapper-locations: classpath*:zk/dao/xml/*.xml
+  configuration:
+    # ??????????????:???????Java???????????
+    map-underscore-to-camel-case: false

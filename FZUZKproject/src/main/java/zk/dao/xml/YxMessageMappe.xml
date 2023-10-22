@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zk.dao.zymessage.YxMessageMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="tblKsMap" type="zk.domain.DTO.ZyMessage.YxMessage">
+        <result column="zy_yx" property="zy_yx" />
+        <result column="zy_dm" property="zy_dm" />
+        <result column="zy_bz" property="zy_bz" />
+        <result column="tzgg_yx" property="tzgg_yx" />
+        <result column="xjsd_yx" property="xjsd_yx" />
+        <result column="xjexl_yx" property="xjexl_yx" />
+        <result column="kkzy_bz" property="kkzy_bz" />
+        <result column="tzxs_yx" property="tzxs_yx" />
+    </resultMap>
+
+
+</mapper>
