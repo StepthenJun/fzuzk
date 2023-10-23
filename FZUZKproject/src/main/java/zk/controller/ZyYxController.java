@@ -36,8 +36,8 @@ public class ZyYxController {
     }
     @ApiOperation("查看专业的")
     @GetMapping("/check")
-    public Result<ZyYxMessage> check(){
+    public Result<List<ZyYxMessage>> check(){
         List<ZyYxMessage> zyYxMessages = zyMessageService.checkZymessage();
-        return Result.success();
+        return Result.success(zyYxMessages);
     }
 }
