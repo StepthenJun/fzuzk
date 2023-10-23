@@ -190,5 +190,10 @@ class FzuzKprojectApplicationTests {
     @Test
     public void promisehavegk(){
         bZyService.setf_gk();
+
     }
+/*    @Test
+    public void deleteAll(){
+        zyMessageService.deleteAll();
+    }*/
 }

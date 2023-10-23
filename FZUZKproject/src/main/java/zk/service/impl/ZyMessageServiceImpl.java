@@ -116,4 +116,7 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         List<ZyYxMessage> zyYxMessages = zyYxMapper.selectList(null);
         return zyYxMessages;
     }
-}
+
+    public void deleteAll(){
+        zyYxMapper.delete(null);
+    }}

@@ -16,4 +16,5 @@ public interface ZyMessageService {
     String insertzyMessage();
     String updateZyMessage(String zy_dm,String zy_mc,String zy_yx);
     List<ZyYxMessage> checkZymessage();
+    void deleteAll();
 }
