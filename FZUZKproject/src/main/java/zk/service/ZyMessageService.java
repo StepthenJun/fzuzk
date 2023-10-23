@@ -3,6 +3,7 @@ package zk.service;
 import zk.domain.DTO.ZyMessage.KcMessage;
 import zk.domain.DTO.ZyMessage.YxMessage;
 import zk.domain.DTO.ZyMessage.ZyMessage;
+import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
 
 import java.util.List;
 
@@ -12,4 +13,7 @@ public interface ZyMessageService {
     List<KcMessage> getKcData(String zy_mc);
 
     List<YxMessage> getYxMessage(String zy_mc);
+    String insertzyMessage();
+    String updateZyMessage(String zy_dm,String zy_mc,String zy_yx);
+    List<ZyYxMessage> checkZymessage();
 }

@@ -13,6 +13,7 @@
         <result column="zytk" property="zytk"/>
         <result column="sftzzs" property="sftzzs"/>
         <result column="kkzt" property="kkzt"/>
+        <result column="zy_dm" property="zy_dm"/>
     </resultMap>
 
 

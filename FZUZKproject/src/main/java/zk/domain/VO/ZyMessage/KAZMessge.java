@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class KAZMessga {
+public class KAZMessge {
     private List<YxMessage> yxMessages;
     private List<ZyMessage> zyMessages;
     private List<KcMessage> kcMessages;

@@ -18,7 +18,7 @@ import zk.domain.DTO.ZyMessage.YxMessage;
 import zk.domain.DTO.ZyMessage.ZyMessage;
 import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
 import zk.domain.VO.ArrangeKs.ZyTable;
-import zk.domain.VO.ZyMessage.KAZMessga;
+import zk.domain.VO.ZyMessage.KAZMessge;
 import zk.service.BZyService;
 import zk.service.ZyMessageService;
 import zk.service.ZyYxService;
@@ -79,7 +79,7 @@ public class BZyController {
         List<YxMessage> yxMessage = zyMessageService.getYxMessage(zy_dm);
         List<ZyMessage> zyData = zyMessageService.getZyData(zy_dm);
         List<KcMessage> kcData = zyMessageService.getKcData(zy_dm);
-        KAZMessga kazMessga = new KAZMessga(yxMessage,zyData,kcData);
+        KAZMessge kazMessga = new KAZMessge(yxMessage,zyData,kcData);
         return Result.success(kazMessga);
     }
 
@@ -88,5 +88,6 @@ public class BZyController {
         List<ZyYxMessage> getzyyxmessage = zyYxService.getzyyxmessage(zyYxMessage);
         return Result.success(getzyyxmessage);
     }
+
 }
 

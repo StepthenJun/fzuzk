@@ -12,6 +12,8 @@ import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.service.BZyService;
 import zk.service.GknewService;
+import zk.service.ZyMessageService;
+import zk.service.ZyYxService;
 
 import java.util.*;
 
@@ -27,6 +29,8 @@ class FzuzKprojectApplicationTests {
     private GkSjMapper gkSjMapper;
     @Autowired
     private GknewService gknewService;
+    @Autowired
+    private ZyMessageService zyMessageService;
 //    测试平均分的算法
 //    不依赖数据库
     @Test
@@ -177,4 +181,11 @@ class FzuzKprojectApplicationTests {
         List<GkSj> gkSjs = gkSjMapper.selectList(null);
         gknewService.arrangeGk(gkSjs);
     }
+
+/*    @Test
+    public void insert2zyyxmessage(){
+        String s = zyMessageService.insertzyMessage();
+        System.out.println(s);
+    }*/
+
 }

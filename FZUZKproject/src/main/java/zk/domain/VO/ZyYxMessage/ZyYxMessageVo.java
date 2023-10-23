@@ -1,5 +1,6 @@
 package zk.domain.VO.ZyYxMessage;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,6 @@ public class ZyYxMessageVo {
     private String zstf;
     private String zytk;
     private String sftzzs;
+    private String zy_dm;
+    private String kkzt;
 }

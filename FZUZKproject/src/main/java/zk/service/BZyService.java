@@ -24,4 +24,5 @@ public interface BZyService{
 
     public List<ZyTable> getZyTable();
     void setf_gk();
+
 }
