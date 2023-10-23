@@ -187,5 +187,8 @@ class FzuzKprojectApplicationTests {
         String s = zyMessageService.insertzyMessage();
         System.out.println(s);
     }*/
-
+    @Test
+    public void promisehavegk(){
+        bZyService.setf_gk();
+    }
 }

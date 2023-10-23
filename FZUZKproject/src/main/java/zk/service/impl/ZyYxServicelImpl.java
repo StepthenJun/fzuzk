@@ -3,6 +3,7 @@ package zk.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import zk.dao.ZyYxmessage.ZyYxMapper;
 import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
 import zk.service.ZyYxService;
@@ -17,23 +18,22 @@ public class ZyYxServicelImpl implements ZyYxService {
 
 //    这部分是根据条件查询
     @Override
-    public List<ZyYxMessage> getzyyxmessage(ZyYxMessage zyYxMessage) {
-        QueryWrapper<ZyYxMessage> qw = new QueryWrapper<>();
-        Class cls = zyYxMessage.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for(int i=0; i<fields.length; i++){
-            Field f = fields[i];
-            f.setAccessible(true);
-                try {
-                    if (!f.get(zyYxMessage).toString().equals(""))
-                    {String value = f.get(zyYxMessage).toString();String name = f.getName();
-                        qw.eq(name,value);}
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+    public List<ZyYxMessage> getzyyxmessage(ZyYxMessage condition) {
+        QueryWrapper<ZyYxMessage> queryWrapper = new QueryWrapper<>();
+        Field[] fields = ZyYxMessage.class.getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object value = field.get(condition);
+                if (value != null && !StringUtils.isEmpty(value.toString())) {
+                    queryWrapper.eq((field.getName()), value);
+                }
             }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
-        List<ZyYxMessage> zyYxMessages = zyYxMapper.selectList(qw);
 
+        return zyYxMapper.selectList(queryWrapper);
 
 
 //        chatgpt给的答案
@@ -57,7 +57,6 @@ public class ZyYxServicelImpl implements ZyYxService {
         };
         return yourRepository.findAll(spec);
     }*/
-        return zyYxMessages;
     }
 
     @Override
