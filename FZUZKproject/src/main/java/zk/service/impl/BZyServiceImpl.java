@@ -56,10 +56,10 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
             String zy_dm = entry.getKey();
 //            获取在循环相关专业的课程
             QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
-            qw1.eq("zy_dm", zy_dm).eq("sf_gk", "#N/A").eq("ks_fs", "笔试");
+            qw1.eq("zy_dm", zy_dm).eq("bz", "国考").eq("ks_fs", "笔试");
             List<TblKs> gK = tblKsMapper.selectList(qw1);
             QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
-            qw2.eq("zy_dm", zy_dm).eq("xjks_fs", "专业核心").eq("sf_gk", "否").eq("ks_fs", "笔试");
+            qw2.eq("zy_dm", zy_dm).eq("xjks_fs", "专业核心").eq("bz", "省考").eq("ks_fs", "笔试");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
             int[] counts = arrangeHx(gK, zyHx);
 //            对list里的对象随机取出，再对其进行时间的赋值
@@ -74,7 +74,7 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
                             .or()
                             .isNull("xjks_fs")
                     )
-                    .eq("sf_gk", "否").eq("ks_fs", "笔试");
+                    .eq("bz", "省考").eq("ks_fs", "笔试");
             List<TblKs> zyList = tblKsMapper.selectList(qw3);
 //           取一个放到一个新的list中再对其随机进行取出再放到一个新的list中作为打乱（只要对randomlist进行抽取就好了）
             while (!zyList.isEmpty()) {
@@ -222,10 +222,10 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
             String zy_dm = entry.getKey();
 //            获取在循环相关专业的课程
             QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
-            qw1.eq("zy_dm", zy_dm).eq("sf_gk", "#N/A").eq("ks_fs", "笔试");
+            qw1.eq("zy_dm", zy_dm).eq("bz", "国考").eq("ks_fs", "笔试");
             List<TblKs> gK = tblKsMapper.selectList(qw1);
             QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
-            qw2.eq("xjks_fs", "专业核心").eq("sf_gk", "否").eq("zy_dm", zy_dm).eq("ks_fs", "笔试");
+            qw2.eq("xjks_fs", "专业核心").eq("bz", "省考").eq("zy_dm", zy_dm).eq("ks_fs", "笔试");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
             int[] counts = arrangeHxLater(gK, zyHx);
 
@@ -241,7 +241,7 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
                             .or()
                             .isNull("xjks_fs")
                     )
-                    .eq("sf_gk", "否").eq("ks_fs", "笔试");
+                    .eq("bz", "省考").eq("ks_fs", "笔试");
             List<TblKs> zyList = tblKsMapper.selectList(qw3);
 //           取一个放到一个新的list中再对其随机进行取出再放到一个新的list中作为打乱（只要对randomlist进行抽取就好了）
             while (!zyList.isEmpty()) {
@@ -469,9 +469,4 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
             return "10月27日(星期日)";
         } else return "";
     }
-
-    //  获取xls文件
-    public void exportOrder(HttpServletResponse response) {
-    }
-
 }

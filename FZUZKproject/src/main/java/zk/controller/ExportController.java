@@ -1,5 +1,7 @@
 package zk.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zk.domain.VO.ArrangeKs.ZyTable;
@@ -11,12 +13,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/FZUZK")
+@Api("导出excel的接口")
 public class ExportController {
     @Autowired
     private ExcelTool excelTool = new ExcelTool();
     @Autowired
     private BZyService bZyService;
 // http://localhost:8080/FZUZK/excel
+    @ApiOperation("导出excel")
     @GetMapping("/excel")
     public String testExport(HttpServletResponse httpServletResponse ){
         ArrayList<ArrayList> row= new ArrayList<>();

@@ -30,4 +30,5 @@ public class TblKs {
     private String xjks_fs;
     private Integer ks_sjlater;
     private String ks_fs;
+    private String bz;
 }

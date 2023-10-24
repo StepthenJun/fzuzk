@@ -66,4 +66,6 @@ public class ZyYxServicelImpl implements ZyYxService {
         int delete = zyYxMapper.delete(qw);
         return delete;
     }
+
+    
 }

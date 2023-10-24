@@ -14,6 +14,7 @@
         <result column="xjks_fs" property="xjks_fs" />
         <result column="ks_sjlater" property="ks_sjlater" />
         <result column="ks_fs" property="ks_fs" />
+        <result column="bz" property="bz" />
     </resultMap>
 
 

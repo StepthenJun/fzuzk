@@ -119,4 +119,17 @@ public class ZyMessageServiceImpl implements ZyMessageService {
 
     public void deleteAll(){
         zyYxMapper.delete(null);
-    }}
+    }
+
+    public Integer updategkkc(String kc_dm,int sj){
+        UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
+        if ( sj <= 4 && sj > 0){
+            uw.eq("kc_dm",kc_dm).set("ks_sj",sj);
+        }
+        else {
+            uw.eq("kc_dm",kc_dm).set("ks_sjlater",sj);
+        }
+        int update = tblKsMapper.update(null, uw);
+        return update;
+    }
+}

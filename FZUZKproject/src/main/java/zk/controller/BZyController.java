@@ -34,7 +34,7 @@ import zk.service.ZyYxService;
  */
 @RestController
 @RequestMapping("/FZUZK/zykc")
-@Api(tags = "接口")
+@Api(tags = "编排表的接口")
 public class BZyController {
     @Autowired
     private BZyService bZyService;
