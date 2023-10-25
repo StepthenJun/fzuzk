@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/FZUZK/zyyx")
-@Api("看专业相关的接口")
+@Api(tags = "看专业相关的接口")
 public class ZyYxController {
     @Autowired
     private ZyYxService zyYxService;

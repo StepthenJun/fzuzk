@@ -80,7 +80,7 @@ public class BZyController {
     @PostMapping("/importgksj")
     public Result importgkmessage(GkSj gkSj){
         String importgksj = bZyService.importgksj(gkSj);
-        return Result.success();
+        return Result.success(importgksj);
     }
 
 }

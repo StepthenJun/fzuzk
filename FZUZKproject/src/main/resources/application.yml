@@ -2,7 +2,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+#    url: jdbc:mysql://59.77.134.82:3307/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     url: jdbc:mysql://localhost:3306/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: 20040816Ywj

@@ -3,10 +3,12 @@ package zk.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import zk.dao.GkSjMapper;
 import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.dao.TblKsMapper;
+import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
 import zk.domain.VO.ArrangeKs.*;
 import zk.domain.VO.ArrangeKs.Date;
 import zk.service.BZyService;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -456,6 +459,20 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
 
     @Override
     public String importgksj(GkSj gkSj) {
+        UpdateWrapper<GkSj> uw = new UpdateWrapper<>();
+
+        Field[] fields = ZyYxMessage.class.getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object value = field.get(gkSj);
+                if (value != null && !StringUtils.isEmpty(value.toString())) {
+                    uw.eq((field.getName()), value);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         gkSjMapper.update(gkSj,null);
         return "导入成功";
     }
