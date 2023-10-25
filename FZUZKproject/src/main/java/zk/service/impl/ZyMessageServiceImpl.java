@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import zk.dao.GkSjMapper;
 import zk.dao.ZyYxmessage.ZyYxMapper;
 import zk.dao.zymessage.KcMessageMapper;
 import zk.dao.TblKsMapper;
 import zk.dao.zymessage.YxMessageMapper;
 import zk.dao.zymessage.ZyMessageMapper;
+import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.DTO.ZyMessage.KcMessage;
 import zk.domain.DTO.ZyMessage.YxMessage;
@@ -35,6 +37,8 @@ public class ZyMessageServiceImpl implements ZyMessageService {
     private BZyService bZyService;
     @Autowired
     private ZyYxMapper zyYxMapper;
+    @Autowired
+    private GkSjMapper gkSjMapper;
 
 //    获取专业信息（根据专业名称题头那部分）
     public List<ZyMessage> getZyData(String zy_dm){
@@ -123,13 +127,28 @@ public class ZyMessageServiceImpl implements ZyMessageService {
 
     public Integer updategkkc(String kc_dm,int sj){
         UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
-        if ( sj <= 4 && sj > 0){
-            uw.eq("kc_dm",kc_dm).set("ks_sj",sj);
+        UpdateWrapper<GkSj> uw1 = new UpdateWrapper<>();
+        String ks_sj = "";
+            if (sj == 1){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","4月13日上午9:00-11:30");
+            }if (sj == 2){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","4月13日下午14:30-17:00");
+            }if (sj == 3){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","4月14日上午9:00-11:30");
+            }if (sj == 4){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","4月14日下午14:30-17:00");
+            }
+            if (sj == 5){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","10月26日上午9:00-11:30");
+            }if (sj == 6){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","10月26日下午14:30-17:00");
+            }if (sj == 7){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","10月27日上午9:00-11:30");
+            }if (sj == 8){
+                uw1.eq("kc_dm",kc_dm).set("ks_sj","10月27日下午14:30-17:00");
+
         }
-        else {
-            uw.eq("kc_dm",kc_dm).set("ks_sjlater",sj);
-        }
-        int update = tblKsMapper.update(null, uw);
+        int update = gkSjMapper.update(null, uw1);
         return update;
     }
 }
