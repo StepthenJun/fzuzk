@@ -1,15 +1,15 @@
 package zk.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
 import zk.domain.Result;
+import zk.domain.VO.ZyYxMessage.ZyxqVO;
 import zk.service.ZyMessageService;
 import zk.service.ZyYxService;
+import zk.service.ZyxqService;
 
 import java.util.List;
 
@@ -23,8 +23,11 @@ public class ZyYxController {
     @Autowired
     private ZyMessageService zyMessageService;
 
-    @DeleteMapping("/delete/{zy_dm}")
-    public Result delete(@PathVariable String zy_dm){
+    @Autowired
+    private ZyxqService zyxqService;
+
+    @DeleteMapping("/delete")
+    public Result delete(String zy_dm){
         int deleted = zyYxService.Delete(zy_dm);
         return Result.success(deleted);
     }
@@ -47,5 +50,19 @@ public class ZyYxController {
     public Result<Integer> updategkkc(String kc_dm, Integer sj){
         int updategkkc = zyMessageService.updategkkc(kc_dm, sj);
         return Result.success(updategkkc);
+    }
+
+    @ApiOperation("查看专业详情")
+    @GetMapping("/checkzyxq/{zy_dm}")
+    public Result<ZyxqVO> checkzyxq(@PathVariable String zy_dm){
+        ZyxqVO zyxqVO = zyxqService.checkZyxq(zy_dm);
+        return Result.success(zyxqVO);
+    }
+
+    @ApiOperation("更新专业详情")
+    @PostMapping("/updatezyxq")
+    public Result<String> updatezyxq(ZyxqVO zyxqVO){
+        String s = zyxqService.updateZyxq(zyxqVO);
+        return Result.success(s);
     }
 }

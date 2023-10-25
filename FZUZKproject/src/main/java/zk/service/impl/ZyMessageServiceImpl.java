@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zk.dao.GkSjMapper;
+import zk.dao.YxMapper.ZyfromYxMapper;
 import zk.dao.ZyYxmessage.ZyYxMapper;
 import zk.dao.zymessage.KcMessageMapper;
 import zk.dao.TblKsMapper;
@@ -15,8 +16,10 @@ import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.DTO.ZyMessage.KcMessage;
 import zk.domain.DTO.ZyMessage.YxMessage;
 import zk.domain.DTO.ZyMessage.ZyMessage;
+import zk.domain.DTO.ZyMessage.ZyfromYx;
 import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
 import zk.domain.VO.ArrangeKs.ZyTable;
+import zk.domain.VO.ZyMessage.YxZyMessageVo;
 import zk.service.BZyService;
 import zk.service.ZyMessageService;
 import zk.service.ZyYxService;
@@ -39,6 +42,8 @@ public class ZyMessageServiceImpl implements ZyMessageService {
     private ZyYxMapper zyYxMapper;
     @Autowired
     private GkSjMapper gkSjMapper;
+    @Autowired
+    private ZyfromYxMapper zyfromYxMapper;
 
 //    获取专业信息（根据专业名称题头那部分）
     public List<ZyMessage> getZyData(String zy_dm){
@@ -150,5 +155,31 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         }
         int update = gkSjMapper.update(null, uw1);
         return update;
+    }
+
+    public YxZyMessageVo getzyfromyx(String zy_yx){
+        QueryWrapper<ZyfromYx> qw = new QueryWrapper<>();
+        qw.eq("zy_yx",zy_yx);
+        List<ZyfromYx> zyMessages = zyfromYxMapper.selectList(qw);
+        Map<String, Integer> zyMap = new HashMap<>();
+        for (ZyfromYx zyfromYx : zyMessages) {
+            String zy_mc = zyfromYx.getZy_mc();
+            if (zyMap.containsKey(zy_mc)) {
+                zyMap.put(zy_mc, zyMap.get(zy_mc) + 1);
+            } else {
+                zyMap.put(zy_mc, 1);
+            }
+        }
+        List<ZyfromYx> zyfromYxList = new ArrayList<>();
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
+        for (int i = 0; i < entryList.size(); i++) {
+            String zy_mc = entryList.get(i).getKey();
+            QueryWrapper<ZyfromYx> qw1 = new QueryWrapper<>();
+            qw1.eq("zy_yx",zy_yx).eq("zy_mc",zy_mc).last("LIMIT 1");
+            ZyfromYx zyfromYx = zyfromYxMapper.selectOne(qw1);
+            zyfromYxList.add(zyfromYx);
+        }
+        YxZyMessageVo yxZyMessageVo = new YxZyMessageVo(zy_yx,zyfromYxList);
+        return yxZyMessageVo;
     }
 }

@@ -1,5 +1,6 @@
 package zk.service;
 
+import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.VO.ArrangeKs.ZyTable;
 
@@ -25,4 +26,5 @@ public interface BZyService{
     public List<ZyTable> getZyTable();
     void setf_gk();
 
+    String importgksj(GkSj gkSj);
 }

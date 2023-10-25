@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName("usermessage")
 @ApiModel("登录类")
-public class Login {
+public class User {
     @ApiModelProperty("用户名")
     private String username;
     @ApiModelProperty("登录密码")
     private String password;
+    private String token;
 }

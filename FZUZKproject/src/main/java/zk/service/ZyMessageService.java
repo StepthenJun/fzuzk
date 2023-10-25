@@ -4,6 +4,7 @@ import zk.domain.DTO.ZyMessage.KcMessage;
 import zk.domain.DTO.ZyMessage.YxMessage;
 import zk.domain.DTO.ZyMessage.ZyMessage;
 import zk.domain.DTO.ZyYxMessage.ZyYxMessage;
+import zk.domain.VO.ZyMessage.YxZyMessageVo;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public interface ZyMessageService {
     List<ZyYxMessage> checkZymessage();
     void deleteAll();
     Integer updategkkc(String kc_dm,int sj);
+    YxZyMessageVo getzyfromyx(String zy_yx);
 }

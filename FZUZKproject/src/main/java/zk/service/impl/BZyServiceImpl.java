@@ -454,6 +454,12 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
         }
     }
 
+    @Override
+    public String importgksj(GkSj gkSj) {
+        gkSjMapper.update(gkSj,null);
+        return "导入成功";
+    }
+
     //获取日期
     public String getKsDate(Integer ksSjDm) {
         if (ksSjDm == 1) {
@@ -469,4 +475,6 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
             return "10月27日(星期日)";
         } else return "";
     }
+
+
 }

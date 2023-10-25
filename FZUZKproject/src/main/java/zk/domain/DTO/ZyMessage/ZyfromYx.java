@@ -1,7 +1,6 @@
-package zk.domain.DTO.ZyYxMessage;
+package zk.domain.DTO.ZyMessage;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,27 +9,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("关于专业的表")
-@TableName("zkyx_message")
-public class ZyYxMessage {
+@TableName("zyxq_message")
+public class ZyfromYx {
     @ApiModelProperty("专业院校")
     private String zy_yx;
     @ApiModelProperty("专业名称")
     private String zy_mc;
-    @ApiModelProperty("毕业学分")
-    private String byxf;
-    @ApiModelProperty("学历层次")
-    private String xlcc;
+    @ApiModelProperty("专业学分")
+    private String zy_xf;
+    @ApiModelProperty("层次")
+    private String cc;
+    @ApiModelProperty("考试方式")
+    private String ks_fs;
     @ApiModelProperty("专业审批")
     private String zysp;
     @ApiModelProperty("证书停发")
     private String zstf;
     @ApiModelProperty("专业停考")
     private String zytk;
-    @ApiModelProperty("是否停止招生")
-    private String sftzzs;
-    @ApiModelProperty("开考条件")
-    private String kkzt;
-    @ApiModelProperty("专业代码")
-    private String zy_dm;
 }

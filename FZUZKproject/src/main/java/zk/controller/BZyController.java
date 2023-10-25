@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.Result;
 import zk.domain.DTO.ZyMessage.KcMessage;
 import zk.domain.DTO.ZyMessage.YxMessage;
@@ -67,22 +68,6 @@ public class BZyController {
         return Result.success(paginatedList);
     }
 
-    @ApiOperation("专业院校类别")
-    @PostMapping("/zyyxType")
-    public Result zytype(){
-        List<String> zyType = zyMessageService.getZyType();
-        return Result.success(zyType);
-    }
-
-    @ApiOperation("点击详情获取专业里的面板的数据")
-    @GetMapping("/getboard")
-    public Result getboard(@RequestParam(value = "zy_dm") String zy_dm){
-        List<YxMessage> yxMessage = zyMessageService.getYxMessage(zy_dm);
-        List<ZyMessage> zyData = zyMessageService.getZyData(zy_dm);
-        List<KcMessage> kcData = zyMessageService.getKcData(zy_dm);
-        KAZMessge kazMessga = new KAZMessge(yxMessage,zyData,kcData);
-        return Result.success(kazMessga);
-    }
 
     @ApiOperation("获取专业信息")
     @PostMapping("/getzyyxmessage")
@@ -91,7 +76,12 @@ public class BZyController {
         return Result.success(getzyyxmessage);
     }
 
-
+    @ApiOperation("导入国考安排时间的excel")
+    @PostMapping("/importgksj")
+    public Result importgkmessage(GkSj gkSj){
+        String importgksj = bZyService.importgksj(gkSj);
+        return Result.success();
+    }
 
 }
 
