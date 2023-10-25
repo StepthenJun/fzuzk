@@ -8,7 +8,7 @@
         <result column="zy_dm" property="zy_dm" />
         <result column="cc" property="cc" />
         <result column="zy_yx" property="zy_yx" />
-        <result column="bk_tj" property="bk_tj" />
+        <result column="bktj" property="bktj" />
     </resultMap>
 
 

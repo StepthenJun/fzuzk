@@ -61,7 +61,7 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         for (int i = 0; i < kcMessages.size(); i++) {
 //            或许就不用更新，每次都刷新一次序号就好了
             /*uw.eq("kc_dm",kcMessages.get(i).getKc_dm()).set("id",i+1);*/
-            kcMessages.get(i).setId(i + 1);
+            /*kcMessages.get(i).setId(i + 1);*/
         }
         return kcMessages;
     }

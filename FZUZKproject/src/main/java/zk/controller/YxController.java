@@ -15,6 +15,7 @@ import zk.domain.Result;
 import zk.domain.VO.ZyMessage.KAZMessge;
 import zk.domain.VO.ZyMessage.YxZyMessageVo;
 import zk.service.BZyService;
+import zk.service.Yx2ZyService;
 import zk.service.ZyMessageService;
 import zk.service.ZyYxService;
 
@@ -25,16 +26,14 @@ import java.util.List;
 public class YxController {
     @Autowired
     private ZyMessageService zyMessageService;
-
+    @Autowired
+    private Yx2ZyService yx2ZyService;
 
     @ApiOperation("点击详情获取专业里的面板的数据")
     @GetMapping("/getboard")
-    public Result getboard(@RequestParam(value = "zy_dm") String zy_dm){
-        List<YxMessage> yxMessage = zyMessageService.getYxMessage(zy_dm);
-        List<ZyMessage> zyData = zyMessageService.getZyData(zy_dm);
-        List<KcMessage> kcData = zyMessageService.getKcData(zy_dm);
-        KAZMessge kazMessga = new KAZMessge(yxMessage,zyData,kcData);
-        return Result.success(kazMessga);
+    public Result<KAZMessge> getboard(@RequestParam(value = "zy_dm") String zy_dm){
+        KAZMessge getallmessage = yx2ZyService.getallmessage(zy_dm);
+        return Result.success(getallmessage);
     }
 
     @ApiOperation("专业院校类别")

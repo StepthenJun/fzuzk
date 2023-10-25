@@ -4,17 +4,16 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="tblKsMap" type="zk.domain.DTO.ZyMessage.KcMessage">
-        <result column="id" property="id" />
-        <result column="kc_type" property="kc_type" />
+        <result column="kctype" property="kctype" />
         <result column="kc_dm" property="kc_dm" />
-        <result column="xf" property="xf" />
+        <result column="kc_xf" property="kc_xf" />
         <result column="mxsh" property="mxsh" />
         <result column="tzgg" property="tzgg" />
         <result column="xjsd" property="xjsd" />
         <result column="jjhkc_dm" property="jjhkc_dm" />
         <result column="jjhkc_mc" property="jjhkc_mc" />
         <result column="bz" property="bz" />
-        <result column="jcbb" property="jcbb" />
+        <result column="cbs" property="cbs" />
     </resultMap>
 
 
