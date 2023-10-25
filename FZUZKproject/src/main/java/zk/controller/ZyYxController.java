@@ -44,7 +44,7 @@ public class ZyYxController {
 
     @ApiOperation("修改国考课程")
     @PostMapping("/updategkkc")
-    public Result<Integer> updategkkc(@PathVariable String kc_dm,@PathVariable Integer sj){
+    public Result<Integer> updategkkc(String kc_dm, Integer sj){
         int updategkkc = zyMessageService.updategkkc(kc_dm, sj);
         return Result.success(updategkkc);
     }

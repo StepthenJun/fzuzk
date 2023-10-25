@@ -74,6 +74,7 @@ public class BZyController {
         return Result.success(zyType);
     }
 
+    @ApiOperation("点击详情获取专业里的面板的数据")
     @GetMapping("/getboard")
     public Result getboard(@RequestParam(value = "zy_dm") String zy_dm){
         List<YxMessage> yxMessage = zyMessageService.getYxMessage(zy_dm);
@@ -83,11 +84,14 @@ public class BZyController {
         return Result.success(kazMessga);
     }
 
+    @ApiOperation("获取专业信息")
     @PostMapping("/getzyyxmessage")
     public Result getzyyxmessage(ZyYxMessage zyYxMessage){
         List<ZyYxMessage> getzyyxmessage = zyYxService.getzyyxmessage(zyYxMessage);
         return Result.success(getzyyxmessage);
     }
+
+
 
 }
 
