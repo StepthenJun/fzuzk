@@ -461,7 +461,7 @@ public class BZyServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements B
     public String importgksj(GkSj gkSj) {
         UpdateWrapper<GkSj> uw = new UpdateWrapper<>();
 
-        Field[] fields = ZyYxMessage.class.getDeclaredFields();
+        Field[] fields = GkSj.class.getDeclaredFields();
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
