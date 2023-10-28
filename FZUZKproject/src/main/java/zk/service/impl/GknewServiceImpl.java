@@ -3,13 +3,11 @@ package zk.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import zk.dao.GkSjnewMapper;
+import zk.dao.GkMapper.GkSjnewMapper;
 import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.GkSjnew;
-import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.service.GknewService;
 
 import java.util.List;
@@ -49,7 +47,6 @@ public class GknewServiceImpl extends ServiceImpl<GkSjnewMapper, GkSjnew> implem
                         uw.set("ks_sj",newkssj);
                         gkSjnewMapper.update(null,uw);
                     }if (ksSj.equals("10月28日上午9:00-11:30")){
-                        System.out.println("28");
                         String newkssj = "10月26日上午9:00-11:30";
                         GkSjnew gkSjnew = new GkSjnew(gk.getKc_dm(),newgkSjList.get(i).getKc_mc(),newkssj);
                         gkSjnewMapper.insert(gkSjnew);

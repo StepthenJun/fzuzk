@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import zk.domain.VO.ArrangeKs.Afternoon;
 import zk.domain.VO.ArrangeKs.Date;
 import zk.domain.VO.ArrangeKs.Morning;
-import zk.domain.VO.ArrangeKs.ZyTable;
+import zk.domain.VO.ArrangeKs.ArrangeTableVO;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -130,7 +130,7 @@ public class ExcelTool {
      * @param rowList Excel的内容
      * @return
      */
-    public String excelOutOnBrowser(HttpServletResponse resp, String excelName, ArrayList<ArrayList> rowList,List<ZyTable> zyTable) {
+    public String excelOutOnBrowser(HttpServletResponse resp, String excelName, ArrayList<ArrayList> rowList,List<ArrangeTableVO> arrangeTableVO) {
 
         String status = "0";    // 设置导出方法执行结果，0失败，1成功，2成功但文件名已存在
         String message = "";    // 设置提示信息
@@ -152,7 +152,6 @@ public class ExcelTool {
         List<String> titleList = setTableTitle();
         // 设置表头合并
         List<CellRangeAddress> cellRangeAddressList = addMergeOrder();
-
 
         setTitle.exportTitle(workbook,sheet,titleList,cellRangeAddressList);
 
@@ -180,8 +179,8 @@ public class ExcelTool {
 
             rowNum++;
         }*/
-        for (int i = 0; i < zyTable.size(); i++) {
-            ZyTable table = zyTable.get(i);
+        for (int i = 0; i < arrangeTableVO.size(); i++) {
+            ArrangeTableVO table = arrangeTableVO.get(i);
             String zydm_mc = table.getZy_dm() +table.getZy_mc();
             String zyYx = table.getZy_yx();
             row = sheet.createRow(rowNum);

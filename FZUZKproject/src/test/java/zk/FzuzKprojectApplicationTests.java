@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import zk.dao.GkSjMapper;
-import zk.dao.TblKsMapper;
+import zk.dao.GkMapper.GkSjMapper;
+import zk.dao.TestTblKsMapper.TblKsMapper;
 import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
-import zk.service.BZyService;
+import zk.domain.VO.ArrangeKs.ArrangeTableVO;
+import zk.service.ArrangeKcService;
 import zk.service.GknewService;
 import zk.service.ZyMessageService;
-import zk.service.ZyYxService;
 
 import java.util.*;
 
@@ -22,7 +22,7 @@ import java.util.*;
 class FzuzKprojectApplicationTests {
 
     @Autowired
-    private BZyService bZyService;
+    private ArrangeKcService arrangeKcService;
     @Autowired
     private TblKsMapper tblKsMapper;
     @Autowired
@@ -125,7 +125,7 @@ class FzuzKprojectApplicationTests {
             QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
             qw2.eq("zy_dm",zy_dm).eq("xjks_fs","专业核心").eq("sf_gk","否");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
-            int[] counts = bZyService.arrangeHx(gK,zyHx);
+            int[] counts = arrangeKcService.arrangeHx(gK,zyHx);
 
 //            对list里的对象随机取出，再对其进行时间的赋值
             //创建一个单独专业的list
@@ -172,7 +172,7 @@ class FzuzKprojectApplicationTests {
     @Test
     public void testProject(){
 /*        bZyService.orderlist();*/
-        bZyService.orderlistlater();
+        arrangeKcService.orderlistlater();
     }
 
 
@@ -189,11 +189,30 @@ class FzuzKprojectApplicationTests {
     }*/
     @Test
     public void promisehavegk(){
-        bZyService.setf_gk();
+        arrangeKcService.setf_gk();
 
     }
 /*    @Test
     public void deleteAll(){
         zyMessageService.deleteAll();
     }*/
+    @Test
+    public void testgk(){
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.select("zy_dm", "kc_mc");
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        Map<String, Integer> zyMap = new HashMap<>();
+        for (TblKs tbl : tblKs) {
+            String zy_dm = tbl.getZy_dm();
+            if (zyMap.containsKey(zy_dm)) {
+                zyMap.put(zy_dm, zyMap.get(zy_dm) + 1);
+            } else {
+                zyMap.put(zy_dm, 1);
+            }
+        }
+        System.out.println(zyMap.size());
+        List<ArrangeTableVO> zyTable = arrangeKcService.getZyTable();
+        int size = zyTable.size();
+        System.out.println(size);
+    }
 }

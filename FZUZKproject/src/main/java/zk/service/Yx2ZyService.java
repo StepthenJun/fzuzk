@@ -1,7 +1,8 @@
 package zk.service;
 
-import zk.domain.VO.ZyMessage.KAZMessge;
+import zk.domain.VO.YxMessage.ZyxqMessge;
 
 public interface Yx2ZyService {
-    KAZMessge getallmessage(String zy_dm);
+    ZyxqMessge getallmessage(String zy_dm);
+    String updatezybz(String zybzm,String zy_dm);
 }

@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import zk.domain.VO.ArrangeKs.ZyTable;
-import zk.service.BZyService;
+import zk.domain.VO.ArrangeKs.ArrangeTableVO;
+import zk.service.ArrangeKcService;
 import zk.util.ExcelTool;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -18,15 +18,28 @@ public class ExportController {
     @Autowired
     private ExcelTool excelTool = new ExcelTool();
     @Autowired
-    private BZyService bZyService;
+    private ArrangeKcService arrangeKcService;
 // http://localhost:8080/FZUZK/excel
     @ApiOperation("导出excel")
     @GetMapping("/excel")
-    public String testExport(HttpServletResponse httpServletResponse ){
+    public String Export(HttpServletResponse httpServletResponse ){
         ArrayList<ArrayList> row= new ArrayList<>();
-        List<ZyTable> zyTables = bZyService.getZyTable();
-        row.add((ArrayList) zyTables);
-        String s = excelTool.excelOutOnBrowser(httpServletResponse, "排考信息", row,zyTables);
+        List<ArrangeTableVO> arrangeTableVOS = arrangeKcService.getZyTable();
+        row.add((ArrayList) arrangeTableVOS);
+        String s = excelTool.excelOutOnBrowser(httpServletResponse, "排考信息", row, arrangeTableVOS);
         return s;
+    }
+
+    @ApiOperation("导出上半年排考excel")
+    @GetMapping("/halfexcel")
+    public String ExportHalf(HttpServletResponse httpServletResponse){
+        return "s";
+    }
+
+    @ApiOperation("导出下半年排考excel")
+    @GetMapping("/laterexcel")
+    public String ExportLater(HttpServletResponse httpServletResponse){
+
+        return "s";
     }
 }
