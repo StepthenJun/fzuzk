@@ -19,6 +19,12 @@ public class ArrangeTableVO {
     private String zy_dm;
     @ApiModelProperty("3.专业院校")
     private String zy_yx;
+    @ApiModelProperty("层次")
+    private String cc;
+    @ApiModelProperty("是否停止招生")
+    private String sftzzs;
+    @ApiModelProperty("委托开考")
+    private String wtkk;
     @ApiModelProperty("4.时间")
     private List<Date> date;
 

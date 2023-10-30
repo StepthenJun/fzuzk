@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @TableName("zyxq_message")
 @ApiModel("专业主考学校的查询条件也是显示的对象")
 public class ZyfromYx {
+    @ApiModelProperty("专业代码")
+    private String zy_dm;
     @ApiModelProperty("专业院校")
     private String zy_yx;
     @ApiModelProperty("专业名称")

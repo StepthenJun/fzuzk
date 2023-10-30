@@ -400,6 +400,9 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             zytbl.setZy_dm(zy_dm);
             zytbl.setZy_mc(ksTable.get(0).getZy_mc());
             zytbl.setZy_yx(ksTable.get(0).getZy_yx());
+            zytbl.setCc(ksTable.get(0).getCc());
+            zytbl.setSftzzs(ksTable.get(0).getSftzzs());
+            zytbl.setWtkk(ksTable.get(0).getWtkk());
             List<Date> dateList = new ArrayList<>();
 
             for (int day = 1; day <= 4; day++) {
@@ -415,11 +418,11 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         if (ksSj != null){
                         if (ksSj == 2 * day || ksSj == 2 * day - 1){
                             if (ksSj % 2 == 1){
-                                Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
+                                Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
                                 morningList.add(morning);
                                 date.setMorningList(morningList);
                             }  if (ksSj % 2 == 0){
-                                Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
+                                Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
                                 afternoonList.add(afternoon);
                                 date.setAfternoonList(afternoonList);
                             }
@@ -427,11 +430,11 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         }if (ksSjlater != null){
                             if (ksSjlater == 2 * day || ksSjlater == 2 * day - 1){
                                 if (ksSjlater % 2 == 1){
-                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
+                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
                                     morningList.add(morning);
                                     date.setMorningList(morningList);
                                 }  if (ksSjlater % 2 == 0){
-                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
+                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
                                     afternoonList.add(afternoon);
                                     date.setAfternoonList(afternoonList);
                                 }

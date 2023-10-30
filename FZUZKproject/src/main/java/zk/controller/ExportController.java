@@ -1,9 +1,12 @@
 package zk.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import zk.dao.TestTblKsMapper.TblKsMapper;
+import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.VO.ArrangeKs.ArrangeTableVO;
 import zk.service.ArrangeKcService;
 import zk.util.ExcelTool;
@@ -19,6 +22,8 @@ public class ExportController {
     private ExcelTool excelTool = new ExcelTool();
     @Autowired
     private ArrangeKcService arrangeKcService;
+    @Autowired
+    private TblKsMapper tblKsMapper;
 // http://localhost:8080/FZUZK/excel
     @ApiOperation("导出excel")
     @GetMapping("/excel")
@@ -30,18 +35,24 @@ public class ExportController {
         return s;
     }
 
-    @ApiOperation("导出课程需求的排考excel")
+    @ApiOperation("导出课上半年排考excel")
     @GetMapping("/halfexcel")
     public String ExportHalf(HttpServletResponse httpServletResponse){
-        List<ArrangeTableVO> arrangeTableVOS = arrangeKcService.getZyTable();
-        excelTool.excelOutkcOnBrowser(httpServletResponse,"上半年",arrangeTableVOS);
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.select().orderByAsc("ks_sj");
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        excelTool.excelOutlastOnBrowser(httpServletResponse,"上半年课程",tblKs);
         return "s";
     }
 
     @ApiOperation("导出下半年排考excel")
     @GetMapping("/laterexcel")
     public String ExportLater(HttpServletResponse httpServletResponse){
-
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.select().orderByAsc("ks_sjlater");
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        excelTool.excelOutlaterOnBrowser(httpServletResponse,"下半年课程",tblKs);
         return "s";
     }
+
 }

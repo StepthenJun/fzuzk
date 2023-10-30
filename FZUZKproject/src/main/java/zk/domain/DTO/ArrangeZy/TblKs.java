@@ -47,4 +47,8 @@ public class TblKs {
     private String bz;
     @ApiModelProperty("层次")
     private String cc;
+    @ApiModelProperty("是否停止招生")
+    private String sftzzs;
+    @ApiModelProperty("委托开考")
+    private String wtkk;
 }

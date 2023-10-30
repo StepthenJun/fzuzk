@@ -15,6 +15,7 @@ public class Morning {
     private String kc_dm;
     @ApiModelProperty("课程名称")
     private String kc_mc;
-    @ApiModelProperty("层次")
-    private String cc;
+    @ApiModelProperty("考试类型")
+    private String bz;
+
 }

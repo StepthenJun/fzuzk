@@ -129,6 +129,7 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         QueryWrapper<ZyfromYx> qw = new QueryWrapper<>();
         qw.eq("zy_yx",zy_yx);
         List<ZyfromYx> zyMessages = zyfromYxMapper.selectList(qw);
+        String zyDm = zyMessages.get(0).getZy_dm();
         Map<String, Integer> zyMap = new HashMap<>();
         for (ZyfromYx zyfromYx : zyMessages) {
             String zy_mc = zyfromYx.getZy_mc();

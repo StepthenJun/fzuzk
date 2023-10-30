@@ -393,6 +393,200 @@ public class ExcelTool {
     }
 
 
+    public String excelOutlastOnBrowser(HttpServletResponse resp, String excelName, List<TblKs> tblKs) {
+
+        String status = "0";    // 设置导出方法执行结果，0失败，1成功，2成功但文件名已存在
+        String message = "";    // 设置提示信息
+        JSONObject obj = new JSONObject();      // 存放执行信息status和message
+
+        // 创建工作簿类
+        // Excel2003版本（包含2003）以前使用HSSFWorkbook类，扩展名为.xls
+        // Excel2007版本（包含2007）以后使用XSSFWorkbook类，扩展名为.xlsx
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        // 创建工作表并设置表名，表名为 传入的表名参数，请注意工作表名不是Excel文件名
+        XSSFSheet sheet = workbook.createSheet(excelName);
+        // 工作表中的行
+        XSSFRow row = null;
+        // 设置Excel文件名，例如：学生表 + 20230114（这是我自己写的时间获取方法，别人用不了，删了就行） + .xlsx
+        String excelFileName = excelName + LocalDate.now().getYear() + "-" + LocalDate.now().getMonthValue() + "-"
+                + LocalDate.now().getDayOfMonth()+ ".xlsx";
+        // 设置表头
+        List<String> titleList = setkcTableTitle();
+        // 设置表头合并
+        List<CellRangeAddress> cellRangeAddressList = addkcMergeOrder();
+
+        setTitle.exportTitle(workbook,sheet,titleList,cellRangeAddressList);
+
+        int rowNum = 1;     // 行下标
+        int colNum = 0;
+        for (int i = 0; i < tblKs.size(); i++) {
+            colNum = 0;
+            row = sheet.createRow(rowNum);
+            TblKs table = tblKs.get(i);
+            String kc_dm = table.getKc_dm();
+            String kcMc = table.getKc_mc();
+            Integer ksSj = table.getKs_sj();
+            if (ksSj != null) {
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 3));
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 7));
+                XSSFCell dmcel = row.createCell(colNum);
+                colNum += 2;
+                dmcel.setCellValue(kc_dm);
+                XSSFCell mccel = row.createCell(colNum);
+                colNum += 2;
+                mccel.setCellValue(kcMc);
+                XSSFCell kssj = row.createCell(colNum);
+                kssj.setCellValue(getKssj(ksSj));
+                rowNum++;
+            }
+        }
+
+
+
+        try {
+            // 设置响应格式，让浏览器知道是下载操作
+            resp.setContentType("applicaton/x-mdownload");
+            // 设置下载后的文件名
+            resp.setHeader("Content-Disposition", "atachment;filename=" + new String(excelFileName.getBytes("utf-8"),"ISO8859-1"));
+            // 设置响应编码
+            resp.setContentType("text/html;charcet=UTF-8");
+            // 建立输出流的连接
+            OutputStream outputStream = resp.getOutputStream();
+
+            // 将数据导出到Excel表格
+            workbook.write(outputStream);
+
+            // 关闭输出流
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+            System.out.println("excel导出失败。");
+            obj.put("status", status);
+            obj.put("message", "excel导出失败。");
+
+            return obj.toJSONString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        status = "1";
+        obj.put("status", status);
+        obj.put("message", "excel导出成功。");
+
+        return obj.toJSONString();
+    }
+    public String excelOutlaterOnBrowser(HttpServletResponse resp, String excelName, List<TblKs> tblKs) {
+
+        String status = "0";    // 设置导出方法执行结果，0失败，1成功，2成功但文件名已存在
+        String message = "";    // 设置提示信息
+        JSONObject obj = new JSONObject();      // 存放执行信息status和message
+
+        // 创建工作簿类
+        // Excel2003版本（包含2003）以前使用HSSFWorkbook类，扩展名为.xls
+        // Excel2007版本（包含2007）以后使用XSSFWorkbook类，扩展名为.xlsx
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        // 创建工作表并设置表名，表名为 传入的表名参数，请注意工作表名不是Excel文件名
+        XSSFSheet sheet = workbook.createSheet(excelName);
+        // 工作表中的行
+        XSSFRow row = null;
+        // 设置Excel文件名，例如：学生表 + 20230114（这是我自己写的时间获取方法，别人用不了，删了就行） + .xlsx
+        String excelFileName = excelName + LocalDate.now().getYear() + "-" + LocalDate.now().getMonthValue() + "-"
+                + LocalDate.now().getDayOfMonth()+ ".xlsx";
+        // 设置表头
+        List<String> titleList = setkcTableTitle();
+        // 设置表头合并
+        List<CellRangeAddress> cellRangeAddressList = addkcMergeOrder();
+
+        setTitle.exportTitle(workbook,sheet,titleList,cellRangeAddressList);
+
+        int rowNum = 1;     // 行下标
+        int colNum = 0;
+        for (int i = 0; i < tblKs.size(); i++) {
+            colNum = 0;
+            row = sheet.createRow(rowNum);
+            TblKs table = tblKs.get(i);
+            String kc_dm = table.getKc_dm();
+            String kcMc = table.getKc_mc();
+            Integer ksSj = table.getKs_sjlater();
+            if (ksSj != null) {
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 3));
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 7));
+                XSSFCell dmcel = row.createCell(colNum);
+                colNum += 2;
+                dmcel.setCellValue(kc_dm);
+                XSSFCell mccel = row.createCell(colNum);
+                colNum += 2;
+                mccel.setCellValue(kcMc);
+                XSSFCell kssj = row.createCell(colNum);
+                kssj.setCellValue(getKssj(ksSj));
+                rowNum++;
+            }
+        }
+
+
+
+        try {
+            // 设置响应格式，让浏览器知道是下载操作
+            resp.setContentType("applicaton/x-mdownload");
+            // 设置下载后的文件名
+            resp.setHeader("Content-Disposition", "atachment;filename=" + new String(excelFileName.getBytes("utf-8"),"ISO8859-1"));
+            // 设置响应编码
+            resp.setContentType("text/html;charcet=UTF-8");
+            // 建立输出流的连接
+            OutputStream outputStream = resp.getOutputStream();
+
+            // 将数据导出到Excel表格
+            workbook.write(outputStream);
+
+            // 关闭输出流
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+            System.out.println("excel导出失败。");
+            obj.put("status", status);
+            obj.put("message", "excel导出失败。");
+
+            return obj.toJSONString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        status = "1";
+        obj.put("status", status);
+        obj.put("message", "excel导出成功。");
+
+        return obj.toJSONString();
+    }
+    public String getKssj(Integer ksSjDm) {
+        if (ksSjDm == 1) {
+            return "4月13日上午9:00-11:30";
+        }
+        if (ksSjDm == 2) {
+            return "4月13日下午14:30-17:00";
+        }
+        if (ksSjDm == 3) {
+            return "4月14日上午9:00-11:30";
+        }
+        if (ksSjDm == 4) {
+            return "4月14日下午14:30-17:00";
+        }if (ksSjDm == 5) {
+            return "10月26日上午9:00-11:30";
+        }if (ksSjDm == 6) {
+            return "10月26日下午14:30-17:00";
+        }if (ksSjDm == 7) {
+            return "10月27日上午9:00-11:30";
+        }if (ksSjDm == 8) {
+            return "10月27日下午14:30-17:00";
+        } else return "";
+    }
     private List<String> setkcTableTitle(){
         List<String> titleList = Lists.newArrayList("课程代码","课程名称","考试时间");
         return titleList;
