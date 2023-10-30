@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/FZUZK/zyyx")
 @Api(tags = "专业设置界面的接口")
+
 public class ZyController {
     @Autowired
     private ZySetService zySetService;

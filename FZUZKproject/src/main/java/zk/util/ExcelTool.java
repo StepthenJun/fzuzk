@@ -183,15 +183,16 @@ public class ExcelTool {
             ArrangeTableVO table = arrangeTableVO.get(i);
             String zydm_mc = table.getZy_dm() +table.getZy_mc();
             String zyYx = table.getZy_yx();
+            String cc = table.getCc();
             row = sheet.createRow(rowNum);
             int colNum = 0;
             for (int k = 0; k < 20; k = k + 2) {
                 sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,colNum + k,colNum + k + 1));
             }
             XSSFCell cellzy = row.createCell(colNum);
-            cellzy.setCellValue(zydm_mc);
+            cellzy.setCellValue(zydm_mc+ "("+ cc +")");
             XSSFCell cellzyyx = row.createCell(colNum + 2);
-            cellzyyx.setCellValue(zyYx);
+            cellzyyx.setCellValue(zyYx );
 
             List<Date> date = table.getDate();
             int colNumtemp = colNum + 4;
@@ -202,12 +203,22 @@ public class ExcelTool {
                 String afternoon = "";
                 if (morningList != null){
                     for (int a = 0; a < morningList.size(); a++) {
-                        morning += morningList.get(a).getKc_dm() + morningList.get(a).getKc_mc() + "\n";
+                        String bz = morningList.get(a).getBz();
+                        if (bz.equals("国考")){
+                            morning += morningList.get(a).getKc_dm() + morningList.get(a).getKc_mc() + "\n";
+                        }
+                        else
+                        morning += morningList.get(a).getKc_dm() + morningList.get(a).getKc_mc() + "△"+ "\n";
                     }
                 }
                 if (afternoonList != null){
                     for (int b = 0; b < afternoonList.size(); b++) {
-                        afternoon += afternoonList.get(b).getKc_dm() + afternoonList.get(b).getKc_mc() + "\n";
+                        String bz = afternoonList.get(b).getBz();
+                        if (bz.equals("国考")){
+                            afternoon += afternoonList.get(b).getKc_dm() + afternoonList.get(b).getKc_mc() + "\n";
+                        }
+                        else
+                        afternoon += afternoonList.get(b).getKc_dm() + afternoonList.get(b).getKc_mc() + "△"+ "\n";
                     }
                 }
                     XSSFCell cellkcmorning = row.createCell(colNumtemp);

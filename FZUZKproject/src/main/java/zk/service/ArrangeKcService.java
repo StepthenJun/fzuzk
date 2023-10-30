@@ -24,7 +24,9 @@ public interface ArrangeKcService {
     int[] arrangeHxLater(List<TblKs> gK,List<TblKs> zyHx);
 
     public List<ArrangeTableVO> getZyTable();
-    void setf_gk();
+   /* void setf_gk();*/
 
     String importgksj(List<GkSj> gkSj);
+
+    String importegksj(List<String> kcdms,List<String> kcmcs,List<String> kssjs);
 }

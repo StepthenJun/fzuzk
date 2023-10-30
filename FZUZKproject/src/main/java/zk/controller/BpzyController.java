@@ -67,17 +67,28 @@ public class BpzyController {
 
     @ApiOperation("获取专业信息")
     @PostMapping(value = "/getzyyxmessage")
-    public Result getzyyxmessage(@RequestBody ZyYxMessage zyYxMessage){
+    public Result getzyyxmessage(ZyYxMessage zyYxMessage){
         List<ZyYxMessage> getzyyxmessage = zySetService.getzyyxmessage(zyYxMessage);
         return Result.success(getzyyxmessage);
     }
 
-    @ApiOperation("导入国考安排时间的excel")
+    /*@ApiOperation("导入国考安排时间的excel")
     @PostMapping(value = "/importgksj")
     public Result importgkmessage(@RequestBody List<GkSj> gkSj){
         String importgksj = arrangeKcService.importgksj(gkSj);
         return Result.success(importgksj);
+    }*/
+    @ApiOperation("导入国考安排时间的excel")
+    @PostMapping(value = "/importgksj")
+    public Result importgkmessage(List<GkSj> gkSj){
+        String importgksj = arrangeKcService.importgksj(gkSj);
+        return Result.success(importgksj);
     }
+    @ApiOperation("导入国考安排时间的excel")
+    @PostMapping(value = "/importgksje")
+    public Result importgkemessage(List<String> kcdms, List<String> kcmcs, List<String> kssjs){
 
+        return Result.success();
+    }
 }
 

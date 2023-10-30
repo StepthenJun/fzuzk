@@ -29,7 +29,7 @@ public class ZykcMessage {
     @ApiModelProperty("课程属性")
     private String kcsx;
     @ApiModelProperty("衔接属性")
-    private String xjsx;
+    private String xjks_fs;
     @ApiModelProperty("衔接课程分类")
     private String xjkcfl;
     @ApiModelProperty("课程名称")

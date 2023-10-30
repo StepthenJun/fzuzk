@@ -187,11 +187,7 @@ class FzuzKprojectApplicationTests {
         String s = zyMessageService.insertzyMessage();
         System.out.println(s);
     }*/
-    @Test
-    public void promisehavegk(){
-        arrangeKcService.setf_gk();
 
-    }
 /*    @Test
     public void deleteAll(){
         zyMessageService.deleteAll();

@@ -36,7 +36,6 @@ public class ZySetServicelImpl implements ZySetService {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-
         return yxtableMapper.selectList(queryWrapper);
 
 

@@ -486,6 +486,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
         }
         return arrangeTableVO;
     }
+/*
     @Override
     public void setf_gk() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
@@ -500,6 +501,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             }
         }
     }
+*/
 
 /*    @Override
     public String importgksj(List<GkSj> gklist) {
@@ -554,8 +556,28 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
         else return "没数据";
     }
 
-
-
+    public String importegksj(List<String> kcdms,List<String> kcmcs,List<String> kssjs){
+        List<GkSj> gkSjs = gkSjMapper.selectList(null);
+        for (int i = 0; i < kcdms.size(); i++) {
+            String kc_dm = kcdms.get(i);
+            String kc_mc = kcmcs.get(i);
+            String kssj = kssjs.get(i);
+            for (int i1 = 0; i1 < gkSjs.size(); i1++) {
+                GkSj gkSj = gkSjs.get(i1);
+                if (gkSj.getKc_dm()  == kc_dm) {
+                    UpdateWrapper<GkSj> uw = new UpdateWrapper<>();
+                    uw.eq("kc_dm", kc_dm).set("kc_mc", kc_mc).set("ks_sj", kssj);
+                    gkSjMapper.update(null, uw);
+                }
+                else {
+                    UpdateWrapper<GkSj> uw = new UpdateWrapper<>();
+                    GkSj gkSj1 = new GkSj(kc_dm,kc_mc,kssj);
+                    gkSjMapper.insert(gkSj1);
+                }
+            }
+        }
+        return "s";
+    }
 
 
     //获取日期
