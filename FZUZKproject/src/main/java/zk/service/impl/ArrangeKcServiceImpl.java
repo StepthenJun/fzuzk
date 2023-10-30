@@ -415,11 +415,11 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         if (ksSj != null){
                         if (ksSj == 2 * day || ksSj == 2 * day - 1){
                             if (ksSj % 2 == 1){
-                                Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc());
+                                Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
                                 morningList.add(morning);
                                 date.setMorningList(morningList);
                             }  if (ksSj % 2 == 0){
-                                Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc());
+                                Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
                                 afternoonList.add(afternoon);
                                 date.setAfternoonList(afternoonList);
                             }
@@ -427,11 +427,11 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         }if (ksSjlater != null){
                             if (ksSjlater == 2 * day || ksSjlater == 2 * day - 1){
                                 if (ksSjlater % 2 == 1){
-                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc());
+                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
                                     morningList.add(morning);
                                     date.setMorningList(morningList);
                                 }  if (ksSjlater % 2 == 0){
-                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc());
+                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getCc());
                                     afternoonList.add(afternoon);
                                     date.setAfternoonList(afternoonList);
                                 }

@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("tbl_kstest")
+@TableName("zyxq_message")
 @ApiModel("编排表课程属性")
 public class TblKs {
     @ApiModelProperty("专业代码")
@@ -45,4 +45,6 @@ public class TblKs {
     private String ks_fs;
     @ApiModelProperty("判断是否国考")
     private String bz;
+    @ApiModelProperty("层次")
+    private String cc;
 }
