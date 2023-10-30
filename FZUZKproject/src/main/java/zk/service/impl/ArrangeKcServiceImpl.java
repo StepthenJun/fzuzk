@@ -36,7 +36,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     @Override
     public List<TblKs> orderlist() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select("zy_dm", "kc_mc");
+        qw.select();
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
         Map<String, Integer> zyMap = new HashMap<>();
         for (TblKs tbl : tblKs) {
@@ -47,7 +47,6 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                 zyMap.put(zy_dm, 1);
             }
         }
-        System.out.println(zyMap.size());
         List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
         for (int i = 0; i < entryList.size(); i++) {
             Map.Entry<String, Integer> entry = entryList.get(i);
@@ -55,12 +54,21 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             String zy_dm = entry.getKey();
 //            获取在循环相关专业的课程
             QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
-            qw1.eq("zy_dm", zy_dm).eq("bz", "国考").eq("ks_fs", "笔试");
+            qw1.eq("zy_dm", zy_dm)
+                    .and(qww -> qww
+                            .eq("bz", "国考")
+                            .or()
+                            .eq("bz", "特殊")
+                    )
+                    .eq("ks_fs", "笔试");
             List<TblKs> gK = tblKsMapper.selectList(qw1);
             QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
             qw2.eq("zy_dm", zy_dm).eq("xjks_fs", "专业核心").eq("bz", "省考").eq("ks_fs", "笔试");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
             int[] counts = arrangeHx(gK, zyHx);
+/*            System.out.println("---------");
+            System.out.println(zy_dm);
+            System.out.println("安排前的计数器" + Arrays.toString(counts));*/
 //            对list里的对象随机取出，再对其进行时间的赋值
             //创建一个单独专业的list
             List<TblKs> randomSelectionList = new ArrayList<>();
@@ -102,6 +110,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         .set("ks_sj", sj);
                 tblKsMapper.update(null, uw);
             }
+/*            System.out.println("安排完的计数器" + Arrays.toString(counts));*/
         }
         return list();
     }
@@ -200,7 +209,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     @Override
     public List<TblKs> orderlistlater() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select("zy_dm", "kc_mc");
+        qw.select();
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
         Map<String, Integer> zyMap = new HashMap<>();
         for (TblKs tbl : tblKs) {
@@ -218,13 +227,19 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             String zy_dm = entry.getKey();
 //            获取在循环相关专业的课程
             QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
-            qw1.eq("zy_dm", zy_dm).eq("bz", "国考").eq("ks_fs", "笔试");
+            qw1.eq("zy_dm", zy_dm).and(qww -> qww
+                    .eq("bz", "国考")
+                    .or()
+                    .eq("bz", "特殊")
+            ).eq("ks_fs", "笔试");
             List<TblKs> gK = tblKsMapper.selectList(qw1);
             QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
             qw2.eq("xjks_fs", "专业核心").eq("bz", "省考").eq("zy_dm", zy_dm).eq("ks_fs", "笔试");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
             int[] counts = arrangeHxLater(gK, zyHx);
-
+/*            System.out.println("---------");
+            System.out.println(zy_dm);
+            System.out.println("安排前的计数器" + Arrays.toString(counts));*/
 //            对list里的对象随机取出，再对其进行时间的赋值
             //创建一个单独专业的list
             List<TblKs> randomSelectionList = new ArrayList<>();
@@ -266,6 +281,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         .set("ks_sjlater", sj);
                 tblKsMapper.update(null, uw);
             }
+/*            System.out.println("安排完的计数器" + Arrays.toString(counts));*/
         }
         return list();
     }
@@ -309,12 +325,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         uw.set("ks_sjlater", 8);
                         bzymapper.update(null, uw);
                         break;
-                    }/*else{
-                    ksList.get(i).setKs_sjlater(null);
-                    uw.set("ks_sjlater",null);
-                    bzymapper.update(null,uw);
-                    break;
-                }*/
+                    }
                 }
             }
         }
@@ -323,7 +334,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             if (ksList.get(i).getKs_sjlater() != null) {
                 int add = ksList.get(i).getKs_sjlater() - 1;
                 for (int j = 0; j < counts.length; j++) {
-                    if (add == j) {
+                    if (add == j + 4) {
                         counts[j]++;
                     }
                 }
@@ -391,7 +402,48 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             zytbl.setZy_yx(ksTable.get(0).getZy_yx());
             List<Date> dateList = new ArrayList<>();
 
-            int count = 0;
+            for (int day = 1; day <= 4; day++) {
+                Date date = new Date();
+                date.setSj(getKsDate(day));
+                List<Morning> morningList = new ArrayList<>();
+                List<Afternoon> afternoonList = new ArrayList<>();
+                for (int j = 0; j < ksTable.size(); j++) {
+                    TblKs tbl = ksTable.get(j);
+                    Integer ksSj = tbl.getKs_sj();
+                    Integer ksSjlater = tbl.getKs_sjlater();
+                    if (ksSj != null || ksSjlater != null){
+                        if (ksSj != null){
+                        if (ksSj == 2 * day || ksSj == 2 * day - 1){
+                            if (ksSj % 2 == 1){
+                                Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc());
+                                morningList.add(morning);
+                                date.setMorningList(morningList);
+                            }  if (ksSj % 2 == 0){
+                                Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc());
+                                afternoonList.add(afternoon);
+                                date.setAfternoonList(afternoonList);
+                            }
+                        }
+                        }if (ksSjlater != null){
+                            if (ksSjlater == 2 * day || ksSjlater == 2 * day - 1){
+                                if (ksSjlater % 2 == 1){
+                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc());
+                                    morningList.add(morning);
+                                    date.setMorningList(morningList);
+                                }  if (ksSjlater % 2 == 0){
+                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc());
+                                    afternoonList.add(afternoon);
+                                    date.setAfternoonList(afternoonList);
+                                }
+                            }
+                        }
+                    }
+                }
+                dateList.add(date);
+            }
+            zytbl.setDate(dateList);
+            arrangeTableVO.add(zytbl);
+            /*int count = 0;
             for (int l = 1; l <= 4; l++) {
                 Date date = new Date();
                 date.setSj(getKsDate(l));
@@ -427,10 +479,10 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             }
             zytbl.setDate(dateList);
             arrangeTableVO.add(zytbl);
+        }*/
         }
         return arrangeTableVO;
     }
-
     @Override
     public void setf_gk() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();

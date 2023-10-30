@@ -26,13 +26,15 @@ public class ExportController {
         ArrayList<ArrayList> row= new ArrayList<>();
         List<ArrangeTableVO> arrangeTableVOS = arrangeKcService.getZyTable();
         row.add((ArrayList) arrangeTableVOS);
-        String s = excelTool.excelOutOnBrowser(httpServletResponse, "排考信息", row, arrangeTableVOS);
+        String s = excelTool.excelOutOnBrowser(httpServletResponse, "排考信息", arrangeTableVOS);
         return s;
     }
 
-    @ApiOperation("导出上半年排考excel")
+    @ApiOperation("导出课程需求的排考excel")
     @GetMapping("/halfexcel")
     public String ExportHalf(HttpServletResponse httpServletResponse){
+        List<ArrangeTableVO> arrangeTableVOS = arrangeKcService.getZyTable();
+        excelTool.excelOutkcOnBrowser(httpServletResponse,"上半年",arrangeTableVOS);
         return "s";
     }
 

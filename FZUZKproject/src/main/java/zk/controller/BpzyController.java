@@ -67,13 +67,13 @@ public class BpzyController {
 
     @ApiOperation("获取专业信息")
     @PostMapping(value = "/getzyyxmessage")
-    public Result getzyyxmessage( ZyYxMessage zyYxMessage){
+    public Result getzyyxmessage(@RequestBody ZyYxMessage zyYxMessage){
         List<ZyYxMessage> getzyyxmessage = zySetService.getzyyxmessage(zyYxMessage);
         return Result.success(getzyyxmessage);
     }
 
     @ApiOperation("导入国考安排时间的excel")
-    @PostMapping(value = "/importgksj", consumes = "application/json")
+    @PostMapping(value = "/importgksj")
     public Result importgkmessage(@RequestBody List<GkSj> gkSj){
         String importgksj = arrangeKcService.importgksj(gkSj);
         return Result.success(importgksj);

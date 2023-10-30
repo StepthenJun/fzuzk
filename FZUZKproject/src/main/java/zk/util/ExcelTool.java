@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Component;
+import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.VO.ArrangeKs.Afternoon;
 import zk.domain.VO.ArrangeKs.Date;
 import zk.domain.VO.ArrangeKs.Morning;
@@ -127,10 +128,9 @@ public class ExcelTool {
 	/**
      * message:Excel导出功能，浏览器下载
      * @param excelName Excel文件名
-     * @param rowList Excel的内容
      * @return
      */
-    public String excelOutOnBrowser(HttpServletResponse resp, String excelName, ArrayList<ArrayList> rowList,List<ArrangeTableVO> arrangeTableVO) {
+    public String excelOutOnBrowser(HttpServletResponse resp, String excelName, List<ArrangeTableVO> arrangeTableVO) {
 
         String status = "0";    // 设置导出方法执行结果，0失败，1成功，2成功但文件名已存在
         String message = "";    // 设置提示信息
@@ -282,7 +282,129 @@ public class ExcelTool {
         cellRangeAddressList.add(new CellRangeAddress(1, 2, 18,19));
         return cellRangeAddressList;
     }
+//安排上下半年的课程安排
+    public String excelOutkcOnBrowser(HttpServletResponse resp, String excelName, List<ArrangeTableVO> arrangeTableVO) {
 
+        String status = "0";    // 设置导出方法执行结果，0失败，1成功，2成功但文件名已存在
+        String message = "";    // 设置提示信息
+        JSONObject obj = new JSONObject();      // 存放执行信息status和message
+
+        // 创建工作簿类
+        // Excel2003版本（包含2003）以前使用HSSFWorkbook类，扩展名为.xls
+        // Excel2007版本（包含2007）以后使用XSSFWorkbook类，扩展名为.xlsx
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        // 创建工作表并设置表名，表名为 传入的表名参数，请注意工作表名不是Excel文件名
+        XSSFSheet sheet = workbook.createSheet(excelName);
+        // 工作表中的行
+        XSSFRow row = null;
+        // 设置Excel文件名，例如：学生表 + 20230114（这是我自己写的时间获取方法，别人用不了，删了就行） + .xlsx
+        String excelFileName = excelName + LocalDate.now().getYear() + "-" + LocalDate.now().getMonthValue() + "-"
+                + LocalDate.now().getDayOfMonth()+ ".xlsx";
+        // 设置表头
+        List<String> titleList = setkcTableTitle();
+        // 设置表头合并
+        List<CellRangeAddress> cellRangeAddressList = addkcMergeOrder();
+
+        setTitle.exportTitle(workbook,sheet,titleList,cellRangeAddressList);
+
+        int rowNum = 1;     // 行下标
+        int colNum = 0;
+        for (int i = 0; i < arrangeTableVO.size(); i++) {
+            ArrangeTableVO table = arrangeTableVO.get(i);
+            List<Date> date = table.getDate();
+            for (int l = 0; l < date.size(); l++) {
+                List<Morning> morningList = date.get(l).getMorningList();
+                List<Afternoon> afternoonList = date.get(l).getAfternoonList();
+                if (morningList != null){
+                    for (int a = 0; a < morningList.size(); a++) {
+                        row = sheet.createRow(rowNum);
+                        colNum = 0;
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,2,3));
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,4,7));
+                        XSSFCell kcdm = row.createCell(colNum);
+                        colNum +=2;
+                        kcdm.setCellValue(morningList.get(a).getKc_dm());
+                        XSSFCell kcmc = row.createCell(colNum);
+                        colNum += 2;
+                        kcmc.setCellValue(morningList.get(a).getKc_mc());
+                        XSSFCell kssj = row.createCell(colNum);
+                        kssj.setCellValue(date.get(l).getSj() + "上午9：00-11：30");
+                        rowNum++;
+                    }
+                }
+                if (afternoonList != null){
+                    for (int a = 0; a < afternoonList.size(); a++) {
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,2,3));
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,4,7));
+                        row = sheet.createRow(rowNum);
+                        colNum = 0;
+                        XSSFCell kcdm = row.createCell(colNum);
+                        colNum += 2;
+                        kcdm.setCellValue(afternoonList.get(a).getKc_dm());
+                        XSSFCell kcmc = row.createCell(colNum);
+                        colNum += 2;
+                        kcmc.setCellValue(afternoonList.get(a).getKc_mc());
+                        XSSFCell kssj = row.createCell(colNum);
+                        kssj.setCellValue(date.get(l).getSj() + "下午14：30-17：00");
+                        rowNum++;
+                    }
+                }
+            }
+        }
+
+
+
+        try {
+            // 设置响应格式，让浏览器知道是下载操作
+            resp.setContentType("applicaton/x-mdownload");
+            // 设置下载后的文件名
+            resp.setHeader("Content-Disposition", "atachment;filename=" + new String(excelFileName.getBytes("utf-8"),"ISO8859-1"));
+            // 设置响应编码
+            resp.setContentType("text/html;charcet=UTF-8");
+            // 建立输出流的连接
+            OutputStream outputStream = resp.getOutputStream();
+
+            // 将数据导出到Excel表格
+            workbook.write(outputStream);
+
+            // 关闭输出流
+            outputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+            System.out.println("excel导出失败。");
+            obj.put("status", status);
+            obj.put("message", "excel导出失败。");
+
+            return obj.toJSONString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        status = "1";
+        obj.put("status", status);
+        obj.put("message", "excel导出成功。");
+
+        return obj.toJSONString();
+    }
+
+
+    private List<String> setkcTableTitle(){
+        List<String> titleList = Lists.newArrayList("课程代码","课程名称","考试时间");
+        return titleList;
+    }
+
+    private List<CellRangeAddress> addkcMergeOrder() {
+        List<CellRangeAddress> cellRangeAddressList = new ArrayList<>();
+        cellRangeAddressList.add(new CellRangeAddress(0, 0, 0, 1));
+        cellRangeAddressList.add(new CellRangeAddress(0, 0, 2, 3));
+        cellRangeAddressList.add(new CellRangeAddress(0, 0, 4, 7));
+        return cellRangeAddressList;
+    }
 
 
 
