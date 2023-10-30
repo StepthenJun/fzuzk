@@ -29,4 +29,6 @@ public interface ArrangeKcService {
     String importgksj(List<GkSj> gkSj);
 
     String importegksj(List<String> kcdms,List<String> kcmcs,List<String> kssjs);
+
+    String setkssj(List<String> sign,List<String> kssj);
 }

@@ -1,12 +1,17 @@
 package zk.common;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import zk.dao.DateMapper.DateMapper;
+
+import java.util.List;
+
+@Component
+@Data
+@TableName("date")
 public class KsDate {
-    private static String SJ1 = "";
-    private static String SJ2 = "";
-    private static String SJ3 = "";
-    private static String SJ4 = "";
-    private static String SJ5 = "";
-    private static String SJ6 = "";
-    private static String SJ7 = "";
-    private static String SJ8 = "";
+    private String sj;
+    private String sign;
 }

@@ -6,11 +6,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import zk.common.KsDate;
+import zk.dao.DateMapper.DateMapper;
 import zk.dao.GkMapper.GkSjMapper;
 import zk.dao.TestTblKsMapper.TblKsMapper;
 import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.VO.ArrangeKs.ArrangeTableVO;
+import zk.domain.VO.ArrangeKs.Date;
 import zk.service.ArrangeKcService;
 import zk.service.GknewService;
 import zk.service.ZyMessageService;
@@ -31,6 +34,8 @@ class FzuzKprojectApplicationTests {
     private GknewService gknewService;
     @Autowired
     private ZyMessageService zyMessageService;
+    @Autowired
+    private DateMapper dateMapper;
 //    测试平均分的算法
 //    不依赖数据库
     @Test
@@ -210,5 +215,12 @@ class FzuzKprojectApplicationTests {
         List<ArrangeTableVO> zyTable = arrangeKcService.getZyTable();
         int size = zyTable.size();
         System.out.println(size);
+    }
+
+
+    @Test
+    public void test(){
+        List<KsDate> ksDates = dateMapper.selectList(null);
+        System.out.println(ksDates);
     }
 }

@@ -1,6 +1,8 @@
 package zk.controller;
 
 
+import com.baomidou.mybatisplus.extension.api.R;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -89,6 +91,13 @@ public class BpzyController {
     public Result importgkemessage(List<String> kcdms, List<String> kcmcs, List<String> kssjs){
 
         return Result.success();
+    }
+
+    @ApiOperation("设置考试时间")
+    @PostMapping("/setkssj")
+    public Result setkssj(List<String> sign,List<String> kssj){
+        String setkssj = arrangeKcService.setkssj(sign, kssj);
+        return Result.success(setkssj);
     }
 }
 

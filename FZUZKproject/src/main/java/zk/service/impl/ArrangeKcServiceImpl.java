@@ -3,6 +3,8 @@ package zk.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import zk.common.KsDate;
+import zk.dao.DateMapper.DateMapper;
 import zk.dao.GkMapper.GkSjMapper;
 import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
@@ -31,7 +33,10 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     private GkSjMapper gkSjMapper;
     @Autowired
     private TblKsMapper tblKsMapper;
-
+    @Autowired
+    private DateMapper dateMapper;
+    @Autowired
+    private List<KsDate> ksDates = dateMapper.selectList(null);
     //excel还是json?
     @Override
     public List<TblKs> orderlist() {
@@ -446,94 +451,9 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             }
             zytbl.setDate(dateList);
             arrangeTableVO.add(zytbl);
-            /*int count = 0;
-            for (int l = 1; l <= 4; l++) {
-                Date date = new Date();
-                date.setSj(getKsDate(l));
-                List<Morning> morningList = new ArrayList<>();
-                List<Afternoon> afternoonList = new ArrayList<>();
-                for (int j = 0; j < ksTable.size(); j++) {
-                    TblKs ks = ksTable.get(j);
-                    if (ks.getKs_sj() != null) {
-                        int kssj = ks.getKs_sj();
-                        if (l > 2) {
-                            if (ks.getKs_sjlater() != null) {
-                                kssj = ks.getKs_sjlater();
-                            }
-                        }
-                        if (kssj == l + count || kssj == l * 2) {
-                            if (kssj % 2 == 1) {
-                                Morning morning = new Morning(ks.getKc_dm(), ks.getKc_mc());
-                                morningList.add(morning);
-                                date.setMorningList(morningList);
-                            }
-                            if (kssj % 2 == 0) {
-                                Afternoon afternoon = new Afternoon(ks.getKc_dm(), ks.getKc_mc());
-                                afternoonList.add(afternoon);
-                                date.setAfternoonList(afternoonList);
-                            }
-                        }
-                    }
-                }
-                if (count < l) {
-                    count++;
-                }
-                dateList.add(date);
-            }
-            zytbl.setDate(dateList);
-            arrangeTableVO.add(zytbl);
-        }*/
         }
         return arrangeTableVO;
     }
-/*
-    @Override
-    public void setf_gk() {
-        QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select();
-        List<TblKs> tblKs = bzymapper.selectList(qw);
-        for (int i = 0; i < tblKs.size(); i++) {
-            if (tblKs.get(i).getSf_gk() == null) {
-                UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
-                uw.eq("kc_dm", tblKs.get(i).getKc_dm())
-                        .set("sf_gk", "否");
-                bzymapper.update(null, uw);
-            }
-        }
-    }
-*/
-
-/*    @Override
-    public String importgksj(List<GkSj> gklist) {
-        if (gklist.isEmpty()) {
-            return "没有要更新的数据";
-        }
-
-        List<String> kcDms = gklist.stream()
-                .map(GkSj::getKc_dm)
-                .distinct()
-                .collect(Collectors.toList());
-
-        UpdateWrapper<GkSj> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.in("kc_dm", kcDms);
-
-        for (GkSj gkSj : gklist) {
-            Field[] fields = GkSj.class.getDeclaredFields();
-            try {
-                for (Field field : fields) {
-                    field.setAccessible(true);
-                    Object value = field.get(gkSj);
-                    if (value != null && !StringUtils.isEmpty(value.toString())) {
-                        updateWrapper.set((field.getName()), value);
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        gkSjMapper.update(null, updateWrapper);
-        return "导入成功";
-    }*/
     @Override
     public String importgksj(List<GkSj> gkSjlist) {
 
@@ -596,5 +516,18 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
         } else return "";
     }
 
-
+    public String setkssj(List<String> sign,List<String> kssj){
+        List<KsDate> ksDates = dateMapper.selectList(null);
+        for (int i = 0; i < ksDates.size(); i++) {
+            KsDate ksDate = ksDates.get(i);
+            for (int j = 0; j < sign.size(); j++) {
+                if (sign.get(j).equals(ksDate.getSign())){
+                    UpdateWrapper<KsDate> uw = new UpdateWrapper<>();
+                    uw.eq("sign",sign.get(j)).set("sj",kssj.get(j));
+                    dateMapper.update(null,uw);
+                }
+            }
+        }
+        return "s";
+    }
 }
