@@ -20,4 +20,6 @@ List<String> getZyType();
 //    void deleteAll();
     Integer updategkkc(String kc_dm,int sj);
     YxZyMessageVo getzyfromyx(String zy_yx);
+
+    String updatekkzybz(String zybz,String zy_dm);
 }

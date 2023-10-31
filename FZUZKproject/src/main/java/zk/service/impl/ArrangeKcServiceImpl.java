@@ -14,6 +14,7 @@ import zk.domain.VO.ArrangeKs.Date;
 import zk.service.ArrangeKcService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+import zk.util.KcSj;
 
 import java.util.*;
 
@@ -35,8 +36,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     private TblKsMapper tblKsMapper;
     @Autowired
     private DateMapper dateMapper;
-    @Autowired
-    private List<KsDate> ksDates = dateMapper.selectList(null);
+
     //excel还是json?
     @Override
     public List<TblKs> orderlist() {
@@ -377,7 +377,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     }
 
     // 得到最终的展现表
-    @Override
+/*    @Override
     public List<ArrangeTableVO> getZyTable() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
         qw.select();
@@ -419,7 +419,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                     TblKs tbl = ksTable.get(j);
                     Integer ksSj = tbl.getKs_sj();
                     Integer ksSjlater = tbl.getKs_sjlater();
-                    if (ksSj != null || ksSjlater != null){
+                    if (ksSj == null || ksSjlater == null){
                         if (ksSj != null){
                         if (ksSj == 2 * day || ksSj == 2 * day - 1){
                             if (ksSj % 2 == 1){
@@ -433,6 +433,87 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                             }
                         }
                         }if (ksSjlater != null){
+                            if (ksSjlater == 2 * day || ksSjlater == 2 * day - 1){
+                                if (ksSjlater % 2 == 1){
+                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
+                                    morningList.add(morning);
+                                    date.setMorningList(morningList);
+                                }  if (ksSjlater % 2 == 0){
+                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
+                                    afternoonList.add(afternoon);
+                                    date.setAfternoonList(afternoonList);
+                                }
+                            }
+                        }
+                    }
+                }
+                dateList.add(date);
+            }
+            zytbl.setDate(dateList);
+            arrangeTableVO.add(zytbl);
+        }
+        return arrangeTableVO;
+    }*/
+
+    @Override
+    public List<ArrangeTableVO> getZyTable() {
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.select();
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        List<ArrangeTableVO> arrangeTableVO = new ArrayList<>();
+        Map<String, Integer> zyMap = new HashMap<>();
+        for (TblKs tbl : tblKs) {
+            String zy_dm = tbl.getZy_dm();
+            if (zyMap.containsKey(zy_dm)) {
+                zyMap.put(zy_dm, zyMap.get(zy_dm) + 1);
+            } else {
+                zyMap.put(zy_dm, 1);
+            }
+        }
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
+        for (int i = 0; i < entryList.size(); i++) {
+            Map.Entry<String, Integer> entry = entryList.get(i);
+            String zy_dm = entry.getKey();
+
+            QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
+            qw1.select().eq("zy_dm", zy_dm);
+            List<TblKs> ksTable = bzymapper.selectList(qw1);
+
+            ArrangeTableVO zytbl = new ArrangeTableVO();
+            zytbl.setZy_dm(zy_dm);
+            zytbl.setZy_mc(ksTable.get(0).getZy_mc());
+            zytbl.setZy_yx(ksTable.get(0).getZy_yx());
+            zytbl.setCc(ksTable.get(0).getCc());
+            zytbl.setSftzzs(ksTable.get(0).getSftzzs());
+            zytbl.setWtkk(ksTable.get(0).getWtkk());
+            List<Date> dateList = new ArrayList<>();
+
+            for (int day = 1; day <= 4; day++) {
+                Date date = new Date();
+                date.setSj(getKsDate(day));
+                List<Morning> morningList = new ArrayList<>();
+                List<Afternoon> afternoonList = new ArrayList<>();
+                for (int j = 0; j < ksTable.size(); j++) {
+                    TblKs tbl = ksTable.get(j);
+                    if (day <= 2){
+                        if (tbl.getKs_sj() != null){
+                            Integer ksSj = tbl.getKs_sj();
+                            if (ksSj == 2 * day || ksSj == 2 * day - 1){
+                                if (ksSj % 2 == 1){
+                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
+                                    morningList.add(morning);
+                                    date.setMorningList(morningList);
+                                }  if (ksSj % 2 == 0){
+                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
+                                    afternoonList.add(afternoon);
+                                    date.setAfternoonList(afternoonList);
+                                }
+                            }
+                        }
+                    }
+                    if (day > 2 ){
+                        if (tbl.getKs_sjlater() != null){
+                            Integer ksSjlater = tbl.getKs_sjlater();
                             if (ksSjlater == 2 * day || ksSjlater == 2 * day - 1){
                                 if (ksSjlater % 2 == 1){
                                     Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
@@ -503,16 +584,16 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     //获取日期
     public String getKsDate(Integer ksSjDm) {
         if (ksSjDm == 1) {
-            return "4月13日(星期六)";
+            return KcSj.getkssj("1").substring(0,KcSj.getkssj("1").indexOf('日') + 1) + "(星期六)";
         }
         if (ksSjDm == 2) {
-            return "4月14日(星期日)";
+            return KcSj.getkssj("3").substring(0,KcSj.getkssj("1").indexOf('日') + 1) + "(星期日)";
         }
         if (ksSjDm == 3) {
-            return "10月26日(星期六)";
+            return KcSj.getkssj("5").substring(0,KcSj.getkssj("1").indexOf('日') + 1) + "(星期六)";
         }
         if (ksSjDm == 4) {
-            return "10月27日(星期日)";
+            return KcSj.getkssj("7").substring(0,KcSj.getkssj("1").indexOf('日') + 1) + "(星期日)";
         } else return "";
     }
 

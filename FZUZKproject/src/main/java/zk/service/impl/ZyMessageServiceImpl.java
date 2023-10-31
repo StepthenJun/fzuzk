@@ -13,6 +13,7 @@ import zk.dao.YxMapper.YxMessageMapper;
 import zk.dao.YxMapper.ZyMessageMapper;
 import zk.domain.DTO.ArrangeZy.GkSj;
 import zk.domain.DTO.ArrangeZy.TblKs;
+import zk.domain.DTO.YxMessage.YxMessage;
 import zk.domain.DTO.YxMessage.ZyMessage;
 import zk.domain.DTO.YxMessage.ZyfromYx;
 import zk.domain.DTO.ZyMessage.ZyYxMessage;
@@ -20,6 +21,7 @@ import zk.domain.VO.ArrangeKs.ArrangeTableVO;
 import zk.domain.VO.YxMessage.YxZyMessageVo;
 import zk.service.ArrangeKcService;
 import zk.service.ZyMessageService;
+import zk.util.KcSj;
 
 import java.util.*;
 
@@ -48,22 +50,22 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         UpdateWrapper<GkSj> uw1 = new UpdateWrapper<>();
         String ks_sj = "";
         if (sj == 1){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","4月13日上午9:00-11:30");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("1"));
         }if (sj == 2){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","4月13日下午14:30-17:00");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("2"));
         }if (sj == 3){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","4月14日上午9:00-11:30");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("3"));
         }if (sj == 4){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","4月14日下午14:30-17:00");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("4"));
         }
         if (sj == 5){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","10月26日上午9:00-11:30");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("5"));
         }if (sj == 6){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","10月26日下午14:30-17:00");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("6"));
         }if (sj == 7){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","10月27日上午9:00-11:30");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("7"));
         }if (sj == 8){
-            uw1.eq("kc_dm",kc_dm).set("ks_sj","10月27日下午14:30-17:00");
+            uw1.eq("kc_dm",kc_dm).set("ks_sj",KcSj.getkssj("8"));
 
         }
         int update = gkSjMapper.update(null, uw1);
@@ -152,6 +154,16 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         return yxZyMessageVo;
     }
 
+
+//    更新面板里的开考专业备注
+    public String updatekkzybz(String zybz,String zy_dm){
+        UpdateWrapper<YxMessage> uw = new UpdateWrapper<>();
+        uw.eq("zy_dm",zy_dm).set("kkzy_bz",zybz);
+        int update = yxMessageMapper.update(null, uw);
+        if (update == 0){
+            return "更新失败";
+        }else return "更新成功";
+    }
 /*//    获取专业信息（根据专业名称题头那部分）
     public List<ZyMessage> getZyData(String zy_dm){
         QueryWrapper<ZyMessage> qw = new QueryWrapper<>();

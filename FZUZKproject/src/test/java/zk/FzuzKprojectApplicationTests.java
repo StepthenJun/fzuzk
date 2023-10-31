@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import zk.common.KsDate;
 import zk.dao.DateMapper.DateMapper;
 import zk.dao.GkMapper.GkSjMapper;
 import zk.dao.TestTblKsMapper.TblKsMapper;
@@ -220,7 +219,23 @@ class FzuzKprojectApplicationTests {
 
     @Test
     public void test(){
-        List<KsDate> ksDates = dateMapper.selectList(null);
-        System.out.println(ksDates);
+        List<ArrangeTableVO> arrangeTableVO = arrangeKcService.getZyTable();
+        int count = 0;
+        for (int i = 0; i < arrangeTableVO.size(); i++) {
+            ArrangeTableVO tableVO = arrangeTableVO.get(i);
+            List<Date> date = tableVO.getDate();
+
+            for (int j = 0; j <= 1; j++) {
+                if (date.get(j).getMorningList() != null){
+                    int count1 = date.get(j).getMorningList().size();
+                    count+=count1;
+                }
+                if (date.get(j).getAfternoonList() != null){
+                int count2 = date.get(j).getAfternoonList().size();
+                    count += count2;
+                }
+            }
+        }
+        System.out.println(count);
     }
 }

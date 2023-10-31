@@ -11,9 +11,6 @@ import zk.util.JwtTokenUtil;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http

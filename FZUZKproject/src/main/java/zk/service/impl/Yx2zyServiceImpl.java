@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import zk.dao.YxMapper.KcMessageMapper;
 import zk.dao.YxMapper.YxMessageMapper;
 import zk.dao.YxMapper.ZyMessageMapper;
+import zk.dao.YxMapper.ZyfromYxMapper;
 import zk.domain.DTO.YxMessage.KcMessage;
 import zk.domain.DTO.YxMessage.YxMessage;
 import zk.domain.DTO.YxMessage.ZyMessage;
+import zk.domain.DTO.YxMessage.ZyfromYx;
 import zk.domain.VO.YxMessage.ZyxqMessge;
 import zk.service.Yx2ZyService;
 
@@ -22,6 +24,8 @@ public class Yx2zyServiceImpl implements Yx2ZyService {
     private KcMessageMapper kcMessageMapper;
     @Autowired
     private YxMessageMapper yxMessageMapper;
+    @Autowired
+    private ZyfromYxMapper zyfromYxMapper;
 
     public ZyxqMessge getallmessage(String zy_dm){
         QueryWrapper<ZyMessage> zyqw = new QueryWrapper<>();
@@ -55,5 +59,11 @@ public class Yx2zyServiceImpl implements Yx2ZyService {
     @Override
     public String updatezybz(String zybz,String zy_dm) {
         return null;
+    }
+
+    @Override
+    public List<ZyfromYx> checkby(ZyfromYx condition) {
+        QueryWrapper<ZyfromYx> qw = new QueryWrapper<>(condition);
+        return zyfromYxMapper.selectList(qw);
     }
 }

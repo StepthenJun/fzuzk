@@ -45,13 +45,15 @@ public class YxController {
 
     @ApiOperation("开考专业备注（面板数据里修改）")
     @PostMapping("/getboard/updatezybz")
-    public String updatekczybz(String zybz,String zy_dm){
-        return "s";
+    public Result<String> updatekczybz(String zybz,String zy_dm){
+        String updatekkzybz = zyMessageService.updatekkzybz(zybz, zy_dm);
+        return Result.success(updatekkzybz);
     }
 
     @ApiOperation("根据条件查询专业")
     @PostMapping("/checkby")
-    public Result checkby(@RequestBody ZyfromYx zyfromYx){
-        return Result.success();
+    public Result checkby(ZyfromYx zyfromYx){
+        List<ZyfromYx> checkby = yx2ZyService.checkby(zyfromYx);
+        return Result.success(checkby);
     }
 }

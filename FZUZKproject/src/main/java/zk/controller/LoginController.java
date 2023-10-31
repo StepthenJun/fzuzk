@@ -12,7 +12,7 @@ import zk.service.UserService;
 import zk.util.TokenUtil;
 
 @RestController
-@RequestMapping("/FZUZK")
+@RequestMapping()
 @Api("登入的接口")
 public class LoginController {
     @Autowired

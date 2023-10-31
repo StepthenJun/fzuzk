@@ -2,6 +2,7 @@ package zk.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.stereotype.Component;
@@ -179,6 +180,15 @@ public class ExcelTool {
 
             rowNum++;
         }*/
+        CellStyle style = workbook.createCellStyle();
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        style.setWrapText(true);
+        List<CellRangeAddress> cellRangeAddressList1 = new ArrayList<>();
         for (int i = 0; i < arrangeTableVO.size(); i++) {
             ArrangeTableVO table = arrangeTableVO.get(i);
             String zydm_mc = table.getZy_dm() +table.getZy_mc();
@@ -187,12 +197,16 @@ public class ExcelTool {
             row = sheet.createRow(rowNum);
             int colNum = 0;
             for (int k = 0; k < 20; k = k + 2) {
-                sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,colNum + k,colNum + k + 1));
+                CellRangeAddress cellRangeAddress = new CellRangeAddress(rowNum,rowNum,colNum + k,colNum + k + 1);
+                sheet.addMergedRegion(cellRangeAddress);
+                cellRangeAddressList1.add(cellRangeAddress);
+                sheet.setColumnWidth(colNum + k, 20 * 256);
             }
+            row.setHeightInPoints(100);
             XSSFCell cellzy = row.createCell(colNum);
             cellzy.setCellValue(zydm_mc+ "("+ cc +")");
             XSSFCell cellzyyx = row.createCell(colNum + 2);
-            cellzyyx.setCellValue(zyYx );
+            cellzyyx.setCellValue(zyYx);
 
             List<Date> date = table.getDate();
             int colNumtemp = colNum + 4;
@@ -224,12 +238,56 @@ public class ExcelTool {
                     XSSFCell cellkcmorning = row.createCell(colNumtemp);
                     colNumtemp += 2;
                     cellkcmorning.setCellValue(morning);
+//                    cellkcmorning.setCellStyle(style);
                     XSSFCell cellafternoon = row.createCell(colNumtemp);
                     colNumtemp += 2;
                     cellafternoon.setCellValue(afternoon);
+//                    cellafternoon.setCellStyle(style);
+
             }
             rowNum++;
+            for (CellRangeAddress cellRangeAddress : cellRangeAddressList) {
+                int firstRow = cellRangeAddress.getFirstRow();
+                int lastRow = cellRangeAddress.getLastRow();
+                int firstCol = cellRangeAddress.getFirstColumn();
+                int lastCol = cellRangeAddress.getLastColumn();
+
+                for (int r = firstRow; r <= lastRow; r++) {
+                    Row currentRow = sheet.getRow(r);
+                    if (currentRow == null) {
+                        currentRow = sheet.createRow(r);
+                    }
+                    for (int c = firstCol; c <= lastCol; c++) {
+                        Cell cell = currentRow.getCell(c);
+                        if (cell == null) {
+                            cell = currentRow.createCell(c);
+                        }
+                        cell.setCellStyle(style);
+                    }
+                }
+            }
+            for (CellRangeAddress cellRangeAddress : cellRangeAddressList1) {
+                int firstRow = cellRangeAddress.getFirstRow();
+                int lastRow = cellRangeAddress.getLastRow();
+                int firstCol = cellRangeAddress.getFirstColumn();
+                int lastCol = cellRangeAddress.getLastColumn();
+
+                for (int r = firstRow; r <= lastRow; r++) {
+                    Row currentRow = sheet.getRow(r);
+                    if (currentRow == null) {
+                        currentRow = sheet.createRow(r);
+                    }
+                    for (int c = firstCol; c <= lastCol; c++) {
+                        Cell cell = currentRow.getCell(c);
+                        if (cell == null) {
+                            cell = currentRow.createCell(c);
+                        }
+                        cell.setCellStyle(style);
+                    }
+                }
+            }
         }
+
 
 
 
@@ -270,7 +328,23 @@ public class ExcelTool {
 
 
     private List<String> setTableTitle(){
-        List<String> titleList = Lists.newArrayList("开考专业","4月13日（星期六）","4月14日（星期日）","10月26日（星期六）","10月27日（星期日）","专业代码名称","面向社会开考主考学校","上午（9：00-11：30）","下午（14：30-17：00）","上午（9：00-11：30）","下午（14：30-17：00）","上午（9：00-11：30）","下午（14：30-17：00）","上午（9：00-11：30）","下午（14：30-17：00）");
+/*
+        List<String> titleList = Lists.newArrayList("开考专业","4月13日（星期六）,"4月14日（星期日）","10月26日（星期六）","10月27日（星期日）","专业代码名称","面向社会开考主考学校","上午（9：00-11：30）","下午（14：30-17：00）","上午（9：00-11：30）","下午（14：30-17：00）","上午（9：00-11：30）","下午（14：30-17：00）","上午（9：00-11：30）","下午（14：30-17：00）");
+*/
+        List<String> titleList = Lists.newArrayList("开考专业",
+                KcSj.getkssj("1").substring(0,KcSj.getkssj("1").indexOf('日') + 1),
+                KcSj.getkssj("3").substring(0,KcSj.getkssj("3").indexOf('日') + 1),
+                KcSj.getkssj("5").substring(0,KcSj.getkssj("5").indexOf('日') + 1),
+                KcSj.getkssj("7").substring(0,KcSj.getkssj("7").indexOf('日') + 1),
+                "专业代码名称","面向社会开考主考学校",
+                KcSj.getkssj("1").substring(KcSj.getkssj("1").indexOf('日') + 1),
+                KcSj.getkssj("2").substring(KcSj.getkssj("2").indexOf('日') + 1),
+                KcSj.getkssj("1").substring(KcSj.getkssj("1").indexOf('日') + 1),
+                KcSj.getkssj("2").substring(KcSj.getkssj("2").indexOf('日') + 1),
+                KcSj.getkssj("1").substring(KcSj.getkssj("1").indexOf('日') + 1),
+                KcSj.getkssj("2").substring(KcSj.getkssj("2").indexOf('日') + 1),
+                KcSj.getkssj("1").substring(KcSj.getkssj("1").indexOf('日') + 1),
+                KcSj.getkssj("2").substring(KcSj.getkssj("2").indexOf('日') + 1));
         return titleList;
     }
 
@@ -576,7 +650,7 @@ public class ExcelTool {
 
         return obj.toJSONString();
     }
-    public String getKssj(Integer ksSjDm) {
+/*    public String getKssj(Integer ksSjDm) {
         if (ksSjDm == 1) {
             return "4月13日上午9:00-11:30";
         }
@@ -596,6 +670,28 @@ public class ExcelTool {
             return "10月27日上午9:00-11:30";
         }if (ksSjDm == 8) {
             return "10月27日下午14:30-17:00";
+        } else return "";
+    }*/
+    public String getKssj(Integer ksSjDm) {
+        if (ksSjDm == 1) {
+            return KcSj.getkssj("1");
+        }
+        if (ksSjDm == 2) {
+            return KcSj.getkssj("2");
+        }
+        if (ksSjDm == 3) {
+            return KcSj.getkssj("3");
+        }
+        if (ksSjDm == 4) {
+            return KcSj.getkssj("4");
+        }if (ksSjDm == 5) {
+            return KcSj.getkssj("5");
+        }if (ksSjDm == 6) {
+            return KcSj.getkssj("6");
+        }if (ksSjDm == 7) {
+            return KcSj.getkssj("7");
+        }if (ksSjDm == 8) {
+            return KcSj.getkssj("8");
         } else return "";
     }
     private List<String> setkcTableTitle(){

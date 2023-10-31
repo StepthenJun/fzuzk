@@ -35,7 +35,7 @@ public class ZyController {
         return Result.success(deleted);
     }
 
-    @ApiOperation("修改专业")
+    @ApiOperation("修改专业（修改哪些属性呢）")
     @PostMapping("/update")
     public Result<String> update(String zy_dm,String zy_mc,String zy_yx){
         String s = zyMessageService.updateZyMessage(zy_dm, zy_mc, zy_yx);

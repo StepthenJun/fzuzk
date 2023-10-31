@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import zk.dao.TestTblKsMapper.TblKsMapper;
 import zk.dao.YxMapper.YxtableMapper;
+import zk.dao.YxMapper.ZyYxMessageMapper;
 import zk.domain.DTO.ArrangeZy.TblKs;
 import zk.domain.DTO.ZyMessage.ZyYxMessage;
 import zk.service.ZySetService;
@@ -19,9 +20,12 @@ public class ZySetServicelImpl implements ZySetService {
     private YxtableMapper yxtableMapper;
     @Autowired
     private TblKsMapper tblKsMapper;
+    @Autowired
+    private ZyYxMessageMapper zyYxMessageMapper;
+
 
 //    这部分是根据条件查询
-    @Override
+/*    @Override
     public List<ZyYxMessage> getzyyxmessage(ZyYxMessage condition) {
         QueryWrapper<ZyYxMessage> queryWrapper = new QueryWrapper<>();
         Field[] fields = ZyYxMessage.class.getDeclaredFields();
@@ -37,31 +41,12 @@ public class ZySetServicelImpl implements ZySetService {
             e.printStackTrace();
         }
         return yxtableMapper.selectList(queryWrapper);
-
-
-//        chatgpt给的答案
-/*        Specification<YourEntity> spec = (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            Class<? extends EntitySearchDTO> dtoClass = searchDTO.getClass();
-
-            for (Field field : dtoClass.getDeclaredFields()) {
-                try {
-                    field.setAccessible(true);
-                    Object value = field.get(searchDTO);
-
-                    if (value != null) {
-                        predicates.add(criteriaBuilder.equal(root.get(field.getName()), value));
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
-        return yourRepository.findAll(spec);
     }*/
+    @Override
+    public List<ZyYxMessage> getzyyxmessage(ZyYxMessage condition){
+        QueryWrapper<ZyYxMessage> queryWrapper = new QueryWrapper<>(condition);
+        return zyYxMessageMapper.selectList(queryWrapper);
     }
-
     @Override
     public String Delete(String zy_dm) {
         QueryWrapper<ZyYxMessage> qw1 = new QueryWrapper<>();
