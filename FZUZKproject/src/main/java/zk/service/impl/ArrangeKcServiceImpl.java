@@ -459,6 +459,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     public List<ArrangeTableVO> getZyTable() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
         qw.select();
+        /*qw.select( "*","LPAD(kc_dm, 5, '0') AS kc_dm");*/
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
         List<ArrangeTableVO> arrangeTableVO = new ArrayList<>();
         Map<String, Integer> zyMap = new HashMap<>();
@@ -478,7 +479,6 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
             qw1.select().eq("zy_dm", zy_dm);
             List<TblKs> ksTable = bzymapper.selectList(qw1);
-
             ArrangeTableVO zytbl = new ArrangeTableVO();
             zytbl.setZy_dm(zy_dm);
             zytbl.setZy_mc(ksTable.get(0).getZy_mc());
@@ -495,6 +495,9 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                 List<Afternoon> afternoonList = new ArrayList<>();
                 for (int j = 0; j < ksTable.size(); j++) {
                     TblKs tbl = ksTable.get(j);
+//                    解决了不足补0的逻辑
+                    String paddedKcDm = String.format("%05d", Integer.parseInt(tbl.getKc_dm()));
+                    tbl.setKc_dm(paddedKcDm);
                     if (day <= 2){
                         if (tbl.getKs_sj() != null){
                             Integer ksSj = tbl.getKs_sj();
