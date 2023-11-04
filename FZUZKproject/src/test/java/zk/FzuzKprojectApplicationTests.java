@@ -175,8 +175,8 @@ class FzuzKprojectApplicationTests {
 
     @Test
     public void testProject(){
-/*        bZyService.orderlist();*/
-        arrangeKcService.orderlistlater();
+          arrangeKcService.orderlist();
+/*        arrangeKcService.orderlistlater();*/
     }
 
 
@@ -192,10 +192,11 @@ class FzuzKprojectApplicationTests {
         System.out.println(s);
     }*/
 
-/*    @Test
-    public void deleteAll(){
-        zyMessageService.deleteAll();
-    }*/
+
+    @Test
+    public void testarrangegk(){
+
+    }
     @Test
     public void testgk(){
         QueryWrapper<TblKs> qw = new QueryWrapper<>();

@@ -1,5 +1,6 @@
 package zk.domain.Date;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("设置考试时间实体类")
+@TableName("date")
 public class KsDate {
     @ApiModelProperty("标识")
     private String sign;

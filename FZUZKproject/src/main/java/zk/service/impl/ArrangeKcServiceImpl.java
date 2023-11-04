@@ -160,12 +160,12 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         uw.set("ks_sj", 4);
                         bzymapper.update(null, uw);
                         break;
-                    } else {
+                    }/* else {
                         ksList.get(i).setKs_sj(null);
                         uw.set("ks_sj", null);
                         bzymapper.update(null, uw);
                         break;
-                    }
+                    }*/
                 }
             }
         }

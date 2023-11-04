@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("zyxq_message")
+@TableName("zyxq_message_new")
 @ApiModel("主考学校设置里点专业详情的最上面一层")
 public class ZyMessage {
     @ApiModelProperty("专业名称")

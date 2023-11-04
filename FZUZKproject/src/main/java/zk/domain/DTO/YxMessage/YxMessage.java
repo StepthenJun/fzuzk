@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("yx_message")
+@TableName("yx_message_new")
 @ApiModel("主考学校设置里点专业详情里的院校表")
 public class YxMessage {
     @ApiModelProperty("专业院校")

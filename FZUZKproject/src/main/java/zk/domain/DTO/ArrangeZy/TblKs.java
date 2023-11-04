@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("zyxq_message")
+@TableName("zyxq_message_new")
 @ApiModel("编排表课程属性")
 public class TblKs {
     @ApiModelProperty("专业代码")

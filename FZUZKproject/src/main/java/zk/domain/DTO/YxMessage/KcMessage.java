@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("zyxq_message")
+@TableName("zyxq_message_new")
 @ApiModel("主考学校设置里点专业详情里的课程表")
 public class KcMessage {
     @ApiModelProperty("课程类型")
@@ -19,6 +19,8 @@ public class KcMessage {
     private String kc_dm;
     @ApiModelProperty("课程学分")
     private String kc_xf;
+    @ApiModelProperty("课程名称")
+    private String kc_mc;
     @ApiModelProperty("面向社会")
     private String mxsh;
     @ApiModelProperty("体制改革")
@@ -33,4 +35,6 @@ public class KcMessage {
     private String bz;
     @ApiModelProperty("出版社")
     private String cbs;
+    @ApiModelProperty("教材版本")
+    private String bc;
 }

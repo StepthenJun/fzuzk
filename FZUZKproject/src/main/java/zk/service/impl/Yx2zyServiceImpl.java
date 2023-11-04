@@ -47,7 +47,8 @@ public class Yx2zyServiceImpl implements Yx2ZyService {
         }
 
         yxqw.eq("zy_dm",zy_dm);
-        YxMessage yxMessage = yxMessageMapper.selectOne(yxqw);
+        List<YxMessage> yxMessages = yxMessageMapper.selectList(yxqw);
+        YxMessage yxMessage = yxMessages.get(0);
         System.out.println(yxMessage);
         if (yxMessage != null){
             System.out.println(yxMessage);

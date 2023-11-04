@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("zyxq_message")
+@TableName("zyxq_message_new")
 @ApiModel("专业主考学校的查询条件也是显示的对象")
 public class ZyfromYx {
     @ApiModelProperty("专业代码")

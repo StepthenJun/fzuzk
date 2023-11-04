@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("zyxq_message")
+@TableName("zyxq_message_new")
 @ApiModel("专业设置点击详情里的课程表属性")
 public class ZykcMessage {
 //    这里要设置序号吗？
