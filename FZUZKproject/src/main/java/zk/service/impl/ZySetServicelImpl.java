@@ -57,4 +57,18 @@ public class ZySetServicelImpl implements ZySetService {
         int deletezyxq = tblKsMapper.delete(qw2);
         return "删除成功";
     }
+
+    @Override
+    public String Deletelist(List<String> zy_dms) {
+        for (int i = 0; i < zy_dms.size(); i++) {
+            String zy_dm = zy_dms.get(i);
+            QueryWrapper<ZyYxMessage> qw1 = new QueryWrapper<>();
+            qw1.eq("zy_dm",zy_dm);
+            QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
+            qw2.eq("zy_dm",zy_dm);
+        }
+        return "成功删除";
+    }
+
+
 }

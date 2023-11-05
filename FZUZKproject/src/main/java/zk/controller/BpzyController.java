@@ -82,7 +82,7 @@ public class BpzyController {
     }*/
     @ApiOperation("导入国考安排时间的excel")
     @PostMapping(value = "/importgksj")
-    public Result importgkmessage(List<GkSj> gkSj){
+    public Result importgkmessage(@RequestBody List<GkSj> gkSj){
         String importgksj = arrangeKcService.importgksj(gkSj);
         return Result.success(importgksj);
     }

@@ -49,4 +49,19 @@ public class ZyxqServiceImpl implements ZyxqService {
         }
         return "成功";
     }
+
+    public String insertZyxq(ZyxqVO condition){
+        Zyxq zyxq = condition.getZyxq();
+        UpdateWrapper<Zyxq> zyxquw = new UpdateWrapper<>();
+        zyxquw.eq("zy_dm",zyxq.getZy_dm());
+        List<ZykcMessage> zykcMessageList = condition.getZykcMessageList();
+        zyxqMapper.update(zyxq,zyxquw);
+        for (int i = 0; i < zykcMessageList.size(); i++) {
+            ZykcMessage zykcMessage = zykcMessageList.get(i);
+            UpdateWrapper<ZykcMessage> zykcuw = new UpdateWrapper<>();
+            zykcuw.eq("kc_dm",zykcMessage.getKc_dm());
+            zykcMessageMapper.update(zykcMessage,zykcuw);
+        }
+        return "成功";
+    }
 }

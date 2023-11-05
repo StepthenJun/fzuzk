@@ -8,5 +8,6 @@ public interface ZySetService {
     List<ZyYxMessage> getzyyxmessage(ZyYxMessage zyYxMessage);
 
     String Delete(String zy_dm);
+    String Deletelist(List<String> zy_dm);
 
 }

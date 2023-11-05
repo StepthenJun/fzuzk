@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Component
 public class JwtTokenUtil {
-    private String secret = "your_secret_key";
+    private String secret = "qwertyuiop";
     private Long expiration = 3600L;
 
     // 生成 Token

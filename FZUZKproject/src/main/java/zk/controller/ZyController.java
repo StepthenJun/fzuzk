@@ -35,6 +35,13 @@ public class ZyController {
         return Result.success(deleted);
     }
 
+    @ApiOperation("批量删除专业")
+    @DeleteMapping("/deletelist")
+    public Result<String> deletelist(List<String> zy_dm){
+        String list = zySetService.Deletelist(zy_dm);
+        return Result.success(list);
+    }
+
     @ApiOperation("修改专业（修改哪些属性呢）")
     @PostMapping("/update")
     public Result<String> update(String zy_dm,String zy_mc,String zy_yx){
@@ -78,7 +85,8 @@ public class ZyController {
 
     @ApiOperation("新增专业(存疑，加专业就要加课程)")
     @PostMapping("/insertzy")
-    public Result insertzy(){
+    public Result insertzy(@RequestBody ZyxqVO zyxqVO){
+        zyxqService.insertZyxq(zyxqVO);
         return Result.success();
     }
 }
