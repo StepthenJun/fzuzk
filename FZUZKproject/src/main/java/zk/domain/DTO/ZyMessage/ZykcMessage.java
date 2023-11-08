@@ -34,4 +34,6 @@ public class ZykcMessage {
     private String xjkcfl;
     @ApiModelProperty("课程名称")
     private String kc_mc;
+    @ApiModelProperty("专业代码")
+    private String zy_dm;
 }

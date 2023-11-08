@@ -64,8 +64,10 @@ public class ZySetServicelImpl implements ZySetService {
             String zy_dm = zy_dms.get(i);
             QueryWrapper<ZyYxMessage> qw1 = new QueryWrapper<>();
             qw1.eq("zy_dm",zy_dm);
+            zyYxMessageMapper.delete(qw1);
             QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
             qw2.eq("zy_dm",zy_dm);
+            tblKsMapper.delete(qw2);
         }
         return "成功删除";
     }

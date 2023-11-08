@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -408,14 +410,16 @@ public class ExcelTool {
                         sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
                         sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,2,3));
                         sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,4,7));
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,8,9));
                         XSSFCell kcdm = row.createCell(colNum);
                         colNum +=2;
+                        String paddedKcDm = String.format("%05d", Integer.parseInt(morningList.get(a).getKc_dm()));
+                        morningList.get(a).setKc_dm(paddedKcDm);
                         kcdm.setCellValue(morningList.get(a).getKc_dm());
                         XSSFCell kcmc = row.createCell(colNum);
                         colNum += 2;
                         kcmc.setCellValue(morningList.get(a).getKc_mc());
-                        XSSFCell kssj = row.createCell(colNum);
-                        kssj.setCellValue(date.get(l).getSj() + "上午9：00-11：30");
+                        colNum += 2;
                         rowNum++;
                     }
                 }
@@ -424,16 +428,20 @@ public class ExcelTool {
                         sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,0,1));
                         sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,2,3));
                         sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,4,7));
+                        sheet.addMergedRegion(new CellRangeAddress(rowNum,rowNum,8,9));
                         row = sheet.createRow(rowNum);
                         colNum = 0;
                         XSSFCell kcdm = row.createCell(colNum);
                         colNum += 2;
+                        String paddedKcDm = String.format("%05d", Integer.parseInt(afternoonList.get(a).getKc_dm()));
+                        afternoonList.get(a).setKc_dm(paddedKcDm);
                         kcdm.setCellValue(afternoonList.get(a).getKc_dm());
                         XSSFCell kcmc = row.createCell(colNum);
                         colNum += 2;
                         kcmc.setCellValue(afternoonList.get(a).getKc_mc());
                         XSSFCell kssj = row.createCell(colNum);
                         kssj.setCellValue(date.get(l).getSj() + "下午14：30-17：00");
+                        colNum += 2;
                         rowNum++;
                     }
                 }
@@ -505,17 +513,22 @@ public class ExcelTool {
 
         int rowNum = 1;     // 行下标
         int colNum = 0;
+
         for (int i = 0; i < tblKs.size(); i++) {
             colNum = 0;
             row = sheet.createRow(rowNum);
             TblKs table = tblKs.get(i);
+            String paddedKcDm = String.format("%05d", Integer.parseInt(table.getKc_dm()));
+            table.setKc_dm(paddedKcDm);
             String kc_dm = table.getKc_dm();
             String kcMc = table.getKc_mc();
+            String bz = table.getBz();
             Integer ksSj = table.getKs_sj();
             if (ksSj != null) {
                 sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
                 sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 3));
                 sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 7));
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
                 XSSFCell dmcel = row.createCell(colNum);
                 colNum += 2;
                 dmcel.setCellValue(kc_dm);
@@ -524,6 +537,9 @@ public class ExcelTool {
                 mccel.setCellValue(kcMc);
                 XSSFCell kssj = row.createCell(colNum);
                 kssj.setCellValue(getKssj(ksSj));
+                colNum += 4;
+                XSSFCell bzcell = row.createCell(colNum);
+                bzcell.setCellValue(bz);
                 rowNum++;
             }
         }
@@ -595,13 +611,17 @@ public class ExcelTool {
             colNum = 0;
             row = sheet.createRow(rowNum);
             TblKs table = tblKs.get(i);
+            String paddedKcDm = String.format("%05d", Integer.parseInt(table.getKc_dm()));
+            table.setKc_dm(paddedKcDm);
             String kc_dm = table.getKc_dm();
             String kcMc = table.getKc_mc();
             Integer ksSj = table.getKs_sjlater();
+            String bz = table.getBz();
             if (ksSj != null) {
                 sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 0, 1));
                 sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 2, 3));
                 sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 4, 7));
+                sheet.addMergedRegion(new CellRangeAddress(rowNum, rowNum, 8, 9));
                 XSSFCell dmcel = row.createCell(colNum);
                 colNum += 2;
                 dmcel.setCellValue(kc_dm);
@@ -610,6 +630,9 @@ public class ExcelTool {
                 mccel.setCellValue(kcMc);
                 XSSFCell kssj = row.createCell(colNum);
                 kssj.setCellValue(getKssj(ksSj));
+                colNum += 4;
+                XSSFCell bzcell = row.createCell(colNum);
+                bzcell.setCellValue(bz);
                 rowNum++;
             }
         }
@@ -695,7 +718,7 @@ public class ExcelTool {
         } else return "";
     }
     private List<String> setkcTableTitle(){
-        List<String> titleList = Lists.newArrayList("课程代码","课程名称","考试时间");
+        List<String> titleList = Lists.newArrayList("课程代码","课程名称","考试时间","课程备注");
         return titleList;
     }
 
@@ -704,6 +727,7 @@ public class ExcelTool {
         cellRangeAddressList.add(new CellRangeAddress(0, 0, 0, 1));
         cellRangeAddressList.add(new CellRangeAddress(0, 0, 2, 3));
         cellRangeAddressList.add(new CellRangeAddress(0, 0, 4, 7));
+        cellRangeAddressList.add(new CellRangeAddress(0, 0, 8, 9));
         return cellRangeAddressList;
     }
 

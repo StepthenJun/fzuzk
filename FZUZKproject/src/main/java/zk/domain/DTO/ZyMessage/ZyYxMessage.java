@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("专业设置展示的每一条（展示类也是实体类）")
-@TableName("zkyx_message_new")
+@TableName("zkyx_message")
 public class ZyYxMessage {
     @ApiModelProperty("专业院校")
     private String zy_yx;

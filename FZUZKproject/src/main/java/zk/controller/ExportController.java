@@ -12,7 +12,9 @@ import zk.service.ArrangeKcService;
 import zk.util.ExcelTool;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/FZUZK")
@@ -39,9 +41,18 @@ public class ExportController {
     @GetMapping("/halfexcel")
     public String ExportHalf(HttpServletResponse httpServletResponse){
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select().orderByAsc("ks_sj");
+        qw.select().orderByAsc("ks_sj").orderByAsc(String.format("LPAD(%s, 5, '0')", "kc_dm")).orderByAsc("kc_mc");
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
-        excelTool.excelOutlastOnBrowser(httpServletResponse,"上半年课程",tblKs);
+        Set<String> uniqueKcMc = new HashSet<>();
+        List<TblKs> filteredList = new ArrayList<>();
+
+        for (TblKs entry : tblKs) {
+            if (uniqueKcMc.add(entry.getKc_dm())) {
+                // 如果成功添加到 Set 中，说明是第一次出现的 kc_mc 值
+                filteredList.add(entry);
+            }
+        }
+        excelTool.excelOutlastOnBrowser(httpServletResponse,"上半年课程",filteredList);
         return "s";
     }
 
@@ -49,9 +60,18 @@ public class ExportController {
     @GetMapping("/laterexcel")
     public String ExportLater(HttpServletResponse httpServletResponse){
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select().orderByAsc("ks_sjlater");
+        qw.select().orderByAsc("ks_sjlater").orderByAsc(String.format("LPAD(%s, 5, '0')", "kc_dm")).orderByAsc("kc_mc");
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
-        excelTool.excelOutlaterOnBrowser(httpServletResponse,"下半年课程",tblKs);
+        Set<String> uniqueKcMc = new HashSet<>();
+        List<TblKs> filteredList = new ArrayList<>();
+
+        for (TblKs entry : tblKs) {
+            if (uniqueKcMc.add(entry.getKc_dm())) {
+                // 如果成功添加到 Set 中，说明是第一次出现的 kc_mc 值
+                filteredList.add(entry);
+            }
+        }
+        excelTool.excelOutlaterOnBrowser(httpServletResponse,"下半年课程",filteredList);
         return "s";
     }
 

@@ -1,16 +1,16 @@
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://59.77.134.82:3307/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://localhost:3306/objmanage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-    username: root
-    password: 20040816Ywj
-#    password: 123456
-mybatis-plus:
-  mapper-locations: classpath*:zk/dao/xml/*.xml
-  configuration:
-    # ??????????????:???????Java???????????
-    map-underscore-to-camel-case: false
-server:
-  port: 8080
-#  port: 8081
+  profiles:
+    active: dev
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://59.77.134.82:3307/objManage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+#    username: root
+#    password: +v+z*XT2ECSAMhPirZ0
+#mybatis-plus:
+#  mapper-locations: classpath*:zk/dao/xml/*.xml
+#  configuration:
+#    # ??????????????:???????Java???????????
+#    map-underscore-to-camel-case: false
+
+
+

@@ -195,7 +195,12 @@ class FzuzKprojectApplicationTests {
 
     @Test
     public void testarrangegk(){
-
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.orderByAsc("zy_dm").orderByAsc("cc");
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        for (TblKs tblK : tblKs) {
+            System.out.println(tblK.getZy_dm() + tblK.getCc());
+        }
     }
     @Test
     public void testgk(){

@@ -86,16 +86,15 @@ public class BpzyController {
         String importgksj = arrangeKcService.importgksj(gkSj);
         return Result.success(importgksj);
     }
-    @ApiOperation("导入国考安排时间的excel")
+  /*  @ApiOperation("导入国考安排时间的excel")
     @PostMapping(value = "/importgksje")
     public Result importgkemessage(List<String> kcdms, List<String> kcmcs, List<String> kssjs){
 
         return Result.success();
-    }
-
+    }*/
     @ApiOperation("设置考试时间")
     @PostMapping("/setkssj")
-    public Result setkssj(List<String> sign,List<String> kssj){
+    public Result setkssj(@RequestParam List<String> sign,@RequestParam List<String> kssj){
         String setkssj = arrangeKcService.setkssj(sign, kssj);
         return Result.success(setkssj);
     }

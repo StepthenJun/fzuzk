@@ -51,17 +51,40 @@ public class ZyxqServiceImpl implements ZyxqService {
     }
 
     public String insertZyxq(ZyxqVO condition){
+        if (condition != null){
         Zyxq zyxq = condition.getZyxq();
-        UpdateWrapper<Zyxq> zyxquw = new UpdateWrapper<>();
-        zyxquw.eq("zy_dm",zyxq.getZy_dm());
-        List<ZykcMessage> zykcMessageList = condition.getZykcMessageList();
-        zyxqMapper.update(zyxq,zyxquw);
-        for (int i = 0; i < zykcMessageList.size(); i++) {
-            ZykcMessage zykcMessage = zykcMessageList.get(i);
-            UpdateWrapper<ZykcMessage> zykcuw = new UpdateWrapper<>();
-            zykcuw.eq("kc_dm",zykcMessage.getKc_dm());
-            zykcMessageMapper.update(zykcMessage,zykcuw);
+        QueryWrapper<Zyxq> qw = new QueryWrapper<>();
+        qw.select(zyxq.getZy_dm());
+        List<Zyxq> zyxqs = zyxqMapper.selectList(qw);
+            String zyDm = zyxq.getZy_dm();
+            zyxqMapper.insert(zyxq);
+            List<ZykcMessage> zykcMessageList = condition.getZykcMessageList();
+            if (zykcMessageList == null){
+                return "你没有输入课程";
+            }else {
+                for (int i = 0; i < zykcMessageList.size(); i++) {
+                    ZykcMessage zykcMessage = zykcMessageList.get(i);
+                    zykcMessage.setZy_dm(zyDm);
+                    UpdateWrapper<ZykcMessage> uw = new UpdateWrapper<>();
+                    uw.eq("zy_dm",zyDm);
+                    zykcMessageMapper.update(zykcMessage,uw);
+                    if (i < zykcMessageList.size() - 1){
+                    zyxqMapper.insert(zyxq);
+                }
+            }
+
+            /*List<ZykcMessage> zykcMessageList = condition.getZykcMessageList();
+            String zyDm = zyxq.getZy_dm();
+            UpdateWrapper<Zyxq> uw = new UpdateWrapper<>();
+            for (int i = 0; i < zykcMessageList.size(); i++) {
+                ZykcMessage zykcMessage = zykcMessageList.get(i);
+                zykcMessage.setZy_dm(zyDm);
+                zykcMessageMapper.insert(zykcMessage);
+                uw.eq("zy_dm",zyDm);
+                zyxqMapper.update(zyxq,uw);
+            }*/
         }
         return "成功";
+        }else return "添加不能为空";
     }
 }

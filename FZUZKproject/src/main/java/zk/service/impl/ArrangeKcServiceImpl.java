@@ -2,6 +2,7 @@ package zk.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import zk.common.KsDate;
 import zk.dao.DateMapper.DateMapper;
@@ -27,6 +28,7 @@ import java.util.*;
  * @since 2023-10-09
  */
 @Service
+@Slf4j
 public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implements ArrangeKcService {
     @Autowired
     private TblKsMapper bzymapper;
@@ -137,25 +139,25 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
 //                    如果时间为这个就赋值时间代码1（依次类推）
 //                    这里我感觉要改成if一次性判断
                     String ksSj = gk.getKs_sj();
-                    if (ksSj.equals("4月13日上午9:00-11:30")) {
+                    if (ksSj.equals(KcSj.getkssj("1"))) {
                         ksList.get(i).setKs_sj(1);
                         uw.set("ks_sj", 1);
                         bzymapper.update(null, uw);
                         break;
                     }
-                    if (ksSj.equals("4月13日下午14:30-17:00")) {
+                    if (ksSj.equals(KcSj.getkssj("2"))) {
                         ksList.get(i).setKs_sj(2);
                         uw.set("ks_sj", 2);
                         bzymapper.update(null, uw);
                         break;
                     }
-                    if (ksSj.equals("4月14日上午9:00-11:30")) {
+                    if (ksSj.equals(KcSj.getkssj("3"))) {
                         ksList.get(i).setKs_sj(3);
                         uw.set("ks_sj", 3);
                         bzymapper.update(null, uw);
                         break;
                     }
-                    if (ksSj.equals("4月14日下午14:30-17:00")) {
+                    if (ksSj.equals(KcSj.getkssj("4"))) {
                         ksList.get(i).setKs_sj(4);
                         uw.set("ks_sj", 4);
                         bzymapper.update(null, uw);
@@ -191,6 +193,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
 //        操，这里忘记随机了md难怪
 //        要获取安排完国考的计数器里的最小值
         int min = 0;
+        Collections.shuffle(zyHx);
         for (int i = 0; i < zyHx.size(); i++) {
             UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
             int sj = 0;
@@ -307,25 +310,25 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                     uw.eq("kc_dm", kc_dm);
 //                    如果时间为这个就赋值时间代码1（依次类推）
                     String ksSj = gk.getKs_sj();
-                    if (ksSj.equals("10月26日上午9:00-11:30")) {
+                    if (ksSj.equals(KcSj.getkssj("5"))) {
                         ksList.get(i).setKs_sjlater(5);
                         uw.set("ks_sjlater", 5);
                         bzymapper.update(null, uw);
                         break;
                     }
-                    if (ksSj.equals("10月26日下午14:30-17:00")) {
+                    if (ksSj.equals(KcSj.getkssj("6"))) {
                         ksList.get(i).setKs_sjlater(6);
                         uw.set("ks_sjlater", 6);
                         bzymapper.update(null, uw);
                         break;
                     }
-                    if (ksSj.equals("10月27日上午9:00-11:30")) {
+                    if (ksSj.equals(KcSj.getkssj("7"))) {
                         ksList.get(i).setKs_sjlater(7);
                         uw.set("ks_sjlater", 7);
                         bzymapper.update(null, uw);
                         break;
                     }
-                    if (ksSj.equals("10月27日下午14:30-17:00")) {
+                    if (ksSj.equals(KcSj.getkssj("8"))) {
                         ksList.get(i).setKs_sjlater(8);
                         uw.set("ks_sjlater", 8);
                         bzymapper.update(null, uw);
@@ -355,6 +358,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
 //        这里也要做到随机
 //        要获取安排完国考的计数器里的最小值
         int min = 0;
+        Collections.shuffle(zyHx);
         for (int i = 0; i < zyHx.size(); i++) {
             UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
             uw.eq("kc_dm", zyHx.get(i).getKc_dm());
@@ -376,106 +380,31 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
         return arrangedGk;
     }
 
-    // 得到最终的展现表
-/*    @Override
-    public List<ArrangeTableVO> getZyTable() {
-        QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select();
-        List<TblKs> tblKs = tblKsMapper.selectList(qw);
-        List<ArrangeTableVO> arrangeTableVO = new ArrayList<>();
-        Map<String, Integer> zyMap = new HashMap<>();
-        for (TblKs tbl : tblKs) {
-            String zy_dm = tbl.getZy_dm();
-            if (zyMap.containsKey(zy_dm)) {
-                zyMap.put(zy_dm, zyMap.get(zy_dm) + 1);
-            } else {
-                zyMap.put(zy_dm, 1);
-            }
-        }
-        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
-        for (int i = 0; i < entryList.size(); i++) {
-            Map.Entry<String, Integer> entry = entryList.get(i);
-            String zy_dm = entry.getKey();
 
-            QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
-            qw1.select().eq("zy_dm", zy_dm);
-            List<TblKs> ksTable = bzymapper.selectList(qw1);
-
-            ArrangeTableVO zytbl = new ArrangeTableVO();
-            zytbl.setZy_dm(zy_dm);
-            zytbl.setZy_mc(ksTable.get(0).getZy_mc());
-            zytbl.setZy_yx(ksTable.get(0).getZy_yx());
-            zytbl.setCc(ksTable.get(0).getCc());
-            zytbl.setSftzzs(ksTable.get(0).getSftzzs());
-            zytbl.setWtkk(ksTable.get(0).getWtkk());
-            List<Date> dateList = new ArrayList<>();
-
-            for (int day = 1; day <= 4; day++) {
-                Date date = new Date();
-                date.setSj(getKsDate(day));
-                List<Morning> morningList = new ArrayList<>();
-                List<Afternoon> afternoonList = new ArrayList<>();
-                for (int j = 0; j < ksTable.size(); j++) {
-                    TblKs tbl = ksTable.get(j);
-                    Integer ksSj = tbl.getKs_sj();
-                    Integer ksSjlater = tbl.getKs_sjlater();
-                    if (ksSj == null || ksSjlater == null){
-                        if (ksSj != null){
-                        if (ksSj == 2 * day || ksSj == 2 * day - 1){
-                            if (ksSj % 2 == 1){
-                                Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
-                                morningList.add(morning);
-                                date.setMorningList(morningList);
-                            }  if (ksSj % 2 == 0){
-                                Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
-                                afternoonList.add(afternoon);
-                                date.setAfternoonList(afternoonList);
-                            }
-                        }
-                        }if (ksSjlater != null){
-                            if (ksSjlater == 2 * day || ksSjlater == 2 * day - 1){
-                                if (ksSjlater % 2 == 1){
-                                    Morning morning = new Morning(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
-                                    morningList.add(morning);
-                                    date.setMorningList(morningList);
-                                }  if (ksSjlater % 2 == 0){
-                                    Afternoon afternoon = new Afternoon(tbl.getKc_dm(), tbl.getKc_mc(),tbl.getBz());
-                                    afternoonList.add(afternoon);
-                                    date.setAfternoonList(afternoonList);
-                                }
-                            }
-                        }
-                    }
-                }
-                dateList.add(date);
-            }
-            zytbl.setDate(dateList);
-            arrangeTableVO.add(zytbl);
-        }
-        return arrangeTableVO;
-    }*/
 
     @Override
     public List<ArrangeTableVO> getZyTable() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select();
-        /*qw.select( "*","LPAD(kc_dm, 5, '0') AS kc_dm");*/
+        qw.orderByAsc("zy_dm").orderByAsc("cc");
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
         List<ArrangeTableVO> arrangeTableVO = new ArrayList<>();
-        Map<String, Integer> zyMap = new HashMap<>();
-        for (TblKs tbl : tblKs) {
+        Map<String, Integer> zyMap = new LinkedHashMap<>();
+        /*for (TblKs tbl : tblKs) {
             String zy_dm = tbl.getZy_dm();
             if (zyMap.containsKey(zy_dm)) {
                 zyMap.put(zy_dm, zyMap.get(zy_dm) + 1);
             } else {
                 zyMap.put(zy_dm, 1);
             }
+        }*/
+        for (TblKs tbl : tblKs) {
+            String zy_dm = tbl.getZy_dm();
+            zyMap.put(zy_dm, zyMap.getOrDefault(zy_dm, 0) + 1);
         }
         List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
         for (int i = 0; i < entryList.size(); i++) {
             Map.Entry<String, Integer> entry = entryList.get(i);
             String zy_dm = entry.getKey();
-
             QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
             qw1.select().eq("zy_dm", zy_dm);
             List<TblKs> ksTable = bzymapper.selectList(qw1);
@@ -540,20 +469,16 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     }
     @Override
     public String importgksj(List<GkSj> gkSjlist) {
-
         if (gkSjlist != null) {
             for (int i = 0; i < gkSjlist.size(); i++) {
                 UpdateWrapper<GkSj> uw = new UpdateWrapper<>();
                 GkSj gkSj = gkSjlist.get(i);
                 if (gkSj.getKc_dm() != null && !gkSj.getKc_dm().isEmpty()){
-                String kc_dm = gkSj.getKc_dm();
-                String ksSj = gkSj.getKs_sj();
-                String kcMc = gkSj.getKc_mc();
-                uw.eq("kc_dm", kc_dm).set("ks_sj",ksSj);
+                    String kc_dm = gkSj.getKc_dm();
+                    String ksSj = gkSj.getKs_sj();
+                    String kcMc = gkSj.getKc_mc();
+                    uw.eq("kc_dm", kc_dm).set("ks_sj",ksSj).set("kc_mc",kcMc);
                 gkSjMapper.update(null, uw);
-                }
-                else if (gkSj.getKc_dm() == null && gkSj.getKc_dm().isEmpty()){
-                    gkSjMapper.insert(gkSj);
                 }
             }return "导入成功";
         }
