@@ -112,6 +112,21 @@ public class ZyMessageServiceImpl implements ZyMessageService {
 //    ---------------------------------专业主考学校的功能
 
     //   专业主考学校的功能（获取主考学校树）
+/*    public List<String> getZyType(){
+        QueryWrapper<ZyMessage> qw = new QueryWrapper<>();
+        qw.select("zy_yx");
+        List<ZyMessage> zyTypes = zyMessageMapper.selectList(qw);
+        HashSet<String> set = new HashSet<String>(zyTypes.size());
+        List<String> result = new ArrayList<String>(zyTypes.size());
+        for (int i = 0; i < zyTypes.size(); i++) {
+            String zy_yx = zyTypes.get(i).getZy_yx();
+
+            if (set.add(zy_yx)){
+                result.add(zy_yx);
+            }
+        }
+        return result;
+    }*/
     public List<String> getZyType(){
         QueryWrapper<ZyMessage> qw = new QueryWrapper<>();
         qw.select("zy_yx");
@@ -121,6 +136,7 @@ public class ZyMessageServiceImpl implements ZyMessageService {
         for (int i = 0; i < zyTypes.size(); i++) {
             String zy_yx = zyTypes.get(i).getZy_yx();
             if (set.add(zy_yx)){
+
                 result.add(zy_yx);
             }
         }

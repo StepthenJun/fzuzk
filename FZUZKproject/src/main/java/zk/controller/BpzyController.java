@@ -46,9 +46,15 @@ public class BpzyController {
     @PostMapping("/orderlist")
     public Result returnList(){
         arrangeKcService.orderlist();
+        return Result.success();
+    }
+    @ApiOperation("重新编排")
+    @PostMapping("/orderlistlater")
+    public Result returnListlater(){
         arrangeKcService.orderlistlater();
         return Result.success();
     }
+
     @ApiOperation("获取全部的专业信息")
     @GetMapping("/getkstable")
     public Result<List<ArrangeTableVO>> returnKstable(){

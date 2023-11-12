@@ -40,7 +40,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     private DateMapper dateMapper;
 
     //excel还是json?
-    @Override
+/*    @Override
     public List<TblKs> orderlist() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
         qw.select();
@@ -73,9 +73,9 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             qw2.eq("zy_dm", zy_dm).eq("xjks_fs", "专业核心").eq("bz", "省考").eq("ks_fs", "笔试");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
             int[] counts = arrangeHx(gK, zyHx);
-/*            System.out.println("---------");
+            System.out.println("---------");
             System.out.println(zy_dm);
-            System.out.println("安排前的计数器" + Arrays.toString(counts));*/
+            System.out.println("安排前的计数器" + Arrays.toString(counts));
 //            对list里的对象随机取出，再对其进行时间的赋值
             //创建一个单独专业的list
             List<TblKs> randomSelectionList = new ArrayList<>();
@@ -117,9 +117,104 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         .set("ks_sj", sj);
                 tblKsMapper.update(null, uw);
             }
-/*            System.out.println("安排完的计数器" + Arrays.toString(counts));*/
+            System.out.println("安排完的计数器" + Arrays.toString(counts));
         }
         return list();
+    }*/
+    /*    @Override
+    public int[] arrangeHx(List<TblKs> gK, List<TblKs> zyHx) {
+        int[] arrangedGk = arrangeGk(gK);
+//        这里也要做到随机
+//        操，这里忘记随机了md难怪
+//        要获取安排完国考的计数器里的最小值
+        int min = 0;
+        Collections.shuffle(zyHx);
+        for (int i = 0; i < zyHx.size(); i++) {
+            UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
+            int sj = 0;
+            for (int j = 0; j < arrangedGk.length; j++) {
+                min = Arrays.stream(arrangedGk).min().getAsInt();
+                if (arrangedGk[j] <= min) {
+                    sj = j + 1;
+                    arrangedGk[j]++;
+                    break;
+                }
+            }
+            zyHx.get(i).setKs_sj(sj);
+            uw.eq("kc_dm", zyHx.get(i).getKc_dm()).set("ks_sj", sj);
+            bzymapper.update(null, uw);
+        }
+        return arrangedGk;
+    }*/
+    public void orderlist() {
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.select();
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        Map<String, Integer> zyMap = new HashMap<>();
+        for (TblKs tbl : tblKs) {
+            String zy_dm = tbl.getZy_dm();
+            if (zyMap.containsKey(zy_dm)) {
+                zyMap.put(zy_dm, zyMap.get(zy_dm) + 1);
+            } else {
+                zyMap.put(zy_dm, 1);
+            }
+        }
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
+        for (int i = 0; i < entryList.size(); i++) {
+            Map.Entry<String, Integer> entry = entryList.get(i);
+//            加强匹配（专业名称和专业代码双重匹配）
+            String zy_dm = entry.getKey();
+//            获取在循环相关专业的课程
+            QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
+            qw1.eq("zy_dm", zy_dm)
+                    .and(qww -> qww
+                            .eq("bz", "国考")
+                            .or()
+                            .eq("bz", "特殊")
+                    )
+                    .eq("ks_fs", "笔试");
+            List<TblKs> gK = tblKsMapper.selectList(qw1);
+            int[] counts = arrangeGk(gK);
+            QueryWrapper<TblKs> qw3 = new QueryWrapper<>();
+            qw3.select()
+                    .eq("zy_dm", zy_dm)
+                    .eq("bz", "省考").eq("ks_fs", "笔试")
+                    .orderByAsc("kc_dm");
+            List<TblKs> zyList = tblKsMapper.selectList(qw3);
+            zyList.sort(Comparator.comparing(TblKs::getKc_dm));
+            int[] ksSjArray = new int[4];
+            int min = 0;
+//           可以对相对应专业的课程进行排序了
+            for (int j = 0; j < zyList.size(); j++) {
+
+                for (int k = 0; k < counts.length; k++) {
+                    min = Arrays.stream(counts).min().getAsInt();
+                    if (counts[k] <= min) {
+                        ksSjArray[k]++;
+                        counts[k]++;
+                        break;
+                    }
+                }
+            }
+//            1.单个时间段按照顺序排
+            // 3.为专业课程分配时间
+            int arrayIndex = 0;
+
+            for (int j = 0; j < zyList.size() && arrayIndex < ksSjArray.length; ) {
+                TblKs Ks = zyList.get(j);
+                for (int k = 0; k < ksSjArray[arrayIndex]; k++) {
+                    Ks.setKs_sj(arrayIndex + 1);
+                    UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
+                    uw.eq("kc_dm",Ks.getKc_dm()).set("ks_sj",arrayIndex + 1);
+                    bzymapper.update(null,uw);
+                    if (++j >= zyList.size()) {
+                        break;  // 避免索引越界
+                    }
+                    Ks = zyList.get(j);
+                }
+                arrayIndex++;
+            }
+        }
     }
 
     //按排上半年的考试
@@ -127,7 +222,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     public int[] arrangeGk(List<TblKs> ksList) {
         QueryWrapper<GkSj> qw = new QueryWrapper<>();
         List<GkSj> gkSjList = gkSjMapper.selectList(qw);
-        int[] counts = {0, 0, 0, 0};
+        int[] counts = new int[4];
 //        将国考对应的时间（代码1，2，3..）添加到考试表里的时间，先把国考的确定了
         for (int i = 0; i < ksList.size(); i++) {
             String kc_dm = ksList.get(i).getKc_dm();
@@ -186,35 +281,10 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
     }
 
     //    抽取核心考试的时间段
-    @Override
-    public int[] arrangeHx(List<TblKs> gK, List<TblKs> zyHx) {
-        int[] arrangedGk = arrangeGk(gK);
-//        这里也要做到随机
-//        操，这里忘记随机了md难怪
-//        要获取安排完国考的计数器里的最小值
-        int min = 0;
-        Collections.shuffle(zyHx);
-        for (int i = 0; i < zyHx.size(); i++) {
-            UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
-            int sj = 0;
-            for (int j = 0; j < arrangedGk.length; j++) {
-                min = Arrays.stream(arrangedGk).min().getAsInt();
-                if (arrangedGk[j] <= min) {
-                    sj = j + 1;
-                    arrangedGk[j]++;
-                    break;
-                }
-            }
-            zyHx.get(i).setKs_sj(sj);
-            uw.eq("kc_dm", zyHx.get(i).getKc_dm()).set("ks_sj", sj);
-            bzymapper.update(null, uw);
-        }
-        return arrangedGk;
-    }
 
 
     //安排下半年的考试
-    @Override
+/*    @Override
     public List<TblKs> orderlistlater() {
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
         qw.select();
@@ -245,9 +315,6 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             qw2.eq("xjks_fs", "专业核心").eq("bz", "省考").eq("zy_dm", zy_dm).eq("ks_fs", "笔试");
             List<TblKs> zyHx = tblKsMapper.selectList(qw2);
             int[] counts = arrangeHxLater(gK, zyHx);
-/*            System.out.println("---------");
-            System.out.println(zy_dm);
-            System.out.println("安排前的计数器" + Arrays.toString(counts));*/
 //            对list里的对象随机取出，再对其进行时间的赋值
             //创建一个单独专业的list
             List<TblKs> randomSelectionList = new ArrayList<>();
@@ -289,16 +356,93 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                         .set("ks_sjlater", sj);
                 tblKsMapper.update(null, uw);
             }
-/*            System.out.println("安排完的计数器" + Arrays.toString(counts));*/
         }
         return list();
+    }*/
+
+    @Override
+    public void orderlistlater(){
+        QueryWrapper<TblKs> qw = new QueryWrapper<>();
+        qw.select();
+        List<TblKs> tblKs = tblKsMapper.selectList(qw);
+        Map<String, Integer> zyMap = new HashMap<>();
+        for (TblKs tbl : tblKs) {
+            String zy_dm = tbl.getZy_dm();
+            if (zyMap.containsKey(zy_dm)) {
+                zyMap.put(zy_dm, zyMap.get(zy_dm) + 1);
+            } else {
+                zyMap.put(zy_dm, 1);
+            }
+        }
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
+        for (int i = 0; i < entryList.size(); i++) {
+            Map.Entry<String, Integer> entry = entryList.get(i);
+//            加强匹配（专业名称和专业代码双重匹配）
+            String zy_dm = entry.getKey();
+//            获取在循环相关专业的课程
+            QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
+            qw1.eq("zy_dm", zy_dm)
+                    .and(qww -> qww
+                            .eq("bz", "国考")
+                            .or()
+                            .eq("bz", "特殊")
+                    )
+                    .eq("ks_fs", "笔试");
+            List<TblKs> gK = tblKsMapper.selectList(qw1);
+            int[] counts = arrangeGkLater(gK);
+            QueryWrapper<TblKs> qw3 = new QueryWrapper<>();
+            qw3.select()
+                    .eq("zy_dm", zy_dm)
+                    .eq("bz", "省考").eq("ks_fs", "笔试")
+                    .orderByAsc("kc_dm");
+            List<TblKs> zyList = tblKsMapper.selectList(qw3);
+            zyList.sort(Comparator.comparing(TblKs::getKc_dm));
+            int[] ksSjArray = new int[4];
+            int min = 0;
+//           可以对相对应专业的课程进行排序了
+            for (int j = 0; j < zyList.size(); j++) {
+                for (int k = 0; k < counts.length; k++) {
+                    min = Arrays.stream(counts).min().getAsInt();
+                    if (counts[k] <= min) {
+                        ksSjArray[k]++;
+                        counts[k]++;
+                        break;
+                    }
+                }
+            }
+//            1.单个时间段按照顺序排
+            // 3.为专业课程分配时间
+            int arrayIndex = 0;
+
+            for (int j = 0; j < zyList.size() && arrayIndex < ksSjArray.length; ) {
+                TblKs Ks = zyList.get(j);
+                for (int k = 0; k < ksSjArray[arrayIndex]; k++) {
+                    Ks.setKs_sjlater(arrayIndex + 5);
+                    UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
+                    uw.eq("kc_dm",Ks.getKc_dm()).set("ks_sjlater",arrayIndex + 5);
+                    bzymapper.update(null,uw);
+                    if (++j >= zyList.size()) {
+                        break;  // 避免索引越界
+                    }
+                    Ks = zyList.get(j);
+                }
+                arrayIndex++;
+            }
+            /*System.out.println(Arrays.toString(ksSjArray));
+            System.out.println(zy_dm);
+            zyList.forEach(t ->{
+                System.out.println(t.getKc_dm() + ","+t.getKs_sjlater() );
+            });
+            System.out.println(Arrays.toString(counts));
+            System.out.println("------------------");*/
+        }
     }
 
     @Override
     public int[] arrangeGkLater(List<TblKs> ksList) {
         QueryWrapper<GkSj> qw = new QueryWrapper<>();
         List<GkSj> gkSjList = gkSjMapper.selectList(qw);
-        int[] counts = {0, 0, 0, 0};
+        int[] counts = new int[4];
 
 //        将国考对应的时间（代码1，2，3..）添加到考试表里的时间，先把国考的确定了
         for (int i = 0; i < ksList.size(); i++) {
@@ -351,7 +495,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
         return counts;
     }
 
-    @Override
+/*    @Override
     public int[] arrangeHxLater(List<TblKs> gK, List<TblKs> zyHx) {
         int[] arrangedGk = arrangeGkLater(gK);
 //        System.out.println(hxs);
@@ -378,7 +522,7 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             bzymapper.update(null, uw);
         }
         return arrangedGk;
-    }
+    }*/
 
 
 

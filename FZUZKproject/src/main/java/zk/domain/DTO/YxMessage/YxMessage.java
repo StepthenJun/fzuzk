@@ -29,4 +29,10 @@ public class YxMessage {
     private String kkzy_bz;
     @ApiModelProperty("体制衔接院校")
     private String tzxs_yx;
+    @ApiModelProperty("停招新生主考院校（体制改革）")
+    private String tzxszk_yx_tzgg;
+    @ApiModelProperty("停招新生主考院校（衔接试点）")
+    private String tzxszk_yx_xjsd;
+    @ApiModelProperty("停招新生主考院校（衔接二学历）")
+    private String tzxszk_yx_xjexl;
 }

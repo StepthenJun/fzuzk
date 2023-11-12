@@ -15,13 +15,15 @@ import java.util.List;
  * @since 2023-10-09
  */
 public interface ArrangeKcService {
-    List<TblKs> orderlist();
+    /*List<TblKs> orderlist();*/
+    void orderlist();
     int[] arrangeGk(List<TblKs> ksList);
-    int[] arrangeHx(List<TblKs> ksList,List<TblKs> zyHx);
+/*    int[] arrangeHx(List<TblKs> ksList,List<TblKs> zyHx);*/
 
-    List<TblKs> orderlistlater();
+    /*List<TblKs> orderlistlater();*/
+    void orderlistlater();
     int[] arrangeGkLater(List<TblKs> ksList);
-    int[] arrangeHxLater(List<TblKs> gK,List<TblKs> zyHx);
+    /*int[] arrangeHxLater(List<TblKs> gK,List<TblKs> zyHx);*/
 
     public List<ArrangeTableVO> getZyTable();
    /* void setf_gk();*/

@@ -16,6 +16,7 @@ import zk.domain.VO.ArrangeKs.Date;
 import zk.service.ArrangeKcService;
 import zk.service.GknewService;
 import zk.service.ZyMessageService;
+import zk.util.KcSj;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ class FzuzKprojectApplicationTests {
     @Autowired
     private GknewService gknewService;
     @Autowired
-    private ZyMessageService zyMessageService;
+    private TblKsMapper bzymapper;
     @Autowired
     private DateMapper dateMapper;
 //    测试平均分的算法
@@ -97,81 +98,6 @@ class FzuzKprojectApplicationTests {
         }
     }
 //    对封装的map进行索引测试（成功）
-    @Test
-    public void testMap(){
-        //国考时间应该重新编写
-        QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select("zy_dm","kc_mc");
-        List<TblKs> tblKs = tblKsMapper.selectList(qw);
-        Map<String,Integer> zyMap = new HashMap<>();
-        for (TblKs tbl : tblKs){
-            String zy_dm = tbl.getZy_dm();
-            if (zyMap.containsKey(zy_dm)){
-                zyMap.put(zy_dm,zyMap.get(zy_dm) + 1);
-            }else {
-                zyMap.put(zy_dm,1);
-            }
-        }
-
-//        通过for循环对每个专业进行抽取
-        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
-        for (int i = 0; i < entryList.size(); i++) {
-            Map.Entry<String,Integer> entry = entryList.get(i);
-//            加强匹配（专业名称和专业代码双重匹配）
-            String zy_dm = entry.getKey();
-//            获取在循环相关专业的课程
-            QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
-            qw1.eq("zy_dm",zy_dm).eq("sf_gk","#N/A");;
-            List<TblKs> gK = tblKsMapper.selectList(qw1);
-//            int[] ints = bZyService.arrangeGk(gK);
-//            System.out.println(Arrays.toString(ints));
-//            System.out.println();
-            QueryWrapper<TblKs> qw2 = new QueryWrapper<>();
-            qw2.eq("zy_dm",zy_dm).eq("xjks_fs","专业核心").eq("sf_gk","否");
-            List<TblKs> zyHx = tblKsMapper.selectList(qw2);
-            int[] counts = arrangeKcService.arrangeHx(gK,zyHx);
-
-//            对list里的对象随机取出，再对其进行时间的赋值
-            //创建一个单独专业的list
-            List<TblKs> randomSelectionList = new ArrayList<>();
-            Random random = new Random();
-            QueryWrapper<TblKs> qw3 = new QueryWrapper<>();
-            qw3.select()
-                .eq("zy_dm",zy_dm)
-                .and
-                (wrapper -> wrapper.or(wrapper1 -> wrapper1.eq("xjks_fs","公共基础").eq("xjks_fs",null)))
-                .and
-                (wrapper -> wrapper.or(wrapper1 -> wrapper1.eq("sf_gk",null).eq("sf_gk","否")));
-            List<TblKs> zyList = tblKsMapper.selectList(qw3);
-//           取一个放到一个新的list中再对其随机进行取出再放到一个新的list中作为打乱（只要对randomlist进行抽取就好了）
-            while (!zyList.isEmpty()) {
-                int randomIndex = random.nextInt(zyList.size());
-                TblKs kc = zyList.get(randomIndex);
-                randomSelectionList.add(kc);
-                zyList.remove(randomIndex);
-            }
-            int min = 0;
-//           可以对相对应专业的课程进行排序了
-            for (int j = 0; j < randomSelectionList.size(); j++) {
-                UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
-                int sj = 0;
-                    for (int k = 0; k < counts.length; k++) {
-
-                        min = Arrays.stream(counts).min().getAsInt();
-
-                        if (counts[k] <= min){
-                            sj = k + 1;
-                            counts[k]++;
-                            break;
-                        }
-                    }
-                    randomSelectionList.get(j).setKs_sj(sj);
-                    uw.eq("kc_dm",randomSelectionList.get(j).getKc_dm())
-                            .set("ks_sj",sj);
-                    tblKsMapper.update(null,uw);
-            }
-        }
-    }
 
     @Test
     public void testProject(){
@@ -186,11 +112,11 @@ class FzuzKprojectApplicationTests {
         gknewService.arrangeGk(gkSjs);
     }
 
-/*    @Test
+    @Test
     public void insert2zyyxmessage(){
-        String s = zyMessageService.insertzyMessage();
-        System.out.println(s);
-    }*/
+        arrangeKcService.orderlist();
+        arrangeKcService.orderlistlater();
+    }
 
 
     @Test
@@ -203,9 +129,10 @@ class FzuzKprojectApplicationTests {
         }
     }
     @Test
-    public void testgk(){
+    public void testgk() {
+
         QueryWrapper<TblKs> qw = new QueryWrapper<>();
-        qw.select("zy_dm", "kc_mc");
+        qw.select();
         List<TblKs> tblKs = tblKsMapper.selectList(qw);
         Map<String, Integer> zyMap = new HashMap<>();
         for (TblKs tbl : tblKs) {
@@ -216,32 +143,119 @@ class FzuzKprojectApplicationTests {
                 zyMap.put(zy_dm, 1);
             }
         }
-        System.out.println(zyMap.size());
-        List<ArrangeTableVO> zyTable = arrangeKcService.getZyTable();
-        int size = zyTable.size();
-        System.out.println(size);
-    }
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(zyMap.entrySet());
+        for (int i = 0; i < entryList.size(); i++) {
+            Map.Entry<String, Integer> entry = entryList.get(i);
+//            加强匹配（专业名称和专业代码双重匹配）
+            String zy_dm = entry.getKey();
+            Integer number = entry.getValue();
+//            获取在循环相关专业的课程
+            QueryWrapper<TblKs> qw1 = new QueryWrapper<>();
+            qw1.eq("zy_dm", zy_dm)
+                    .and(qww -> qww
+                            .eq("bz", "国考")
+                            .or()
+                            .eq("bz", "特殊")
+                    )
+                    .eq("ks_fs", "笔试");
+            List<TblKs> gK = tblKsMapper.selectList(qw1);
+            int[] counts = arrangeGk(gK);
+            QueryWrapper<TblKs> qw3 = new QueryWrapper<>();
+            qw3.select()
+                    .eq("zy_dm", zy_dm)
+                    .eq("bz", "省考").eq("ks_fs", "笔试")
+                    .orderByAsc("kc_dm");
+            List<TblKs> zyList = tblKsMapper.selectList(qw3);
+            zyList.sort(Comparator.comparing(TblKs::getKc_dm));
+            int[] ksSjArray = new int[4];
+            int min = 0;
+//           可以对相对应专业的课程进行排序了
+            for (int j = 0; j < zyList.size(); j++) {
 
-
-    @Test
-    public void test(){
-        List<ArrangeTableVO> arrangeTableVO = arrangeKcService.getZyTable();
-        int count = 0;
-        for (int i = 0; i < arrangeTableVO.size(); i++) {
-            ArrangeTableVO tableVO = arrangeTableVO.get(i);
-            List<Date> date = tableVO.getDate();
-
-            for (int j = 0; j <= 1; j++) {
-                if (date.get(j).getMorningList() != null){
-                    int count1 = date.get(j).getMorningList().size();
-                    count+=count1;
+                for (int k = 0; k < counts.length; k++) {
+                    min = Arrays.stream(counts).min().getAsInt();
+                    if (counts[k] <= min) {
+                        ksSjArray[k]++;
+                        counts[k]++;
+                        break;
+                    }
                 }
-                if (date.get(j).getAfternoonList() != null){
-                int count2 = date.get(j).getAfternoonList().size();
-                    count += count2;
+            }
+//            1.单个时间段按照顺序排
+            // 3.为专业课程分配时间
+            int arrayIndex = 0;
+            UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
+            for (int j = 0; j < zyList.size() && arrayIndex < ksSjArray.length;) {
+                TblKs Ks = zyList.get(j);
+                for (int k = 0; k < ksSjArray[arrayIndex]; k++) {
+                    Ks.setKs_sj(arrayIndex + 1);
+                    uw.eq("kc_dm",Ks.getKc_dm()).set("ks_sj",arrayIndex + 1);
+                    bzymapper.update(null, uw);
+                    if (++j >= zyList.size()) {
+                        break;  // 避免索引越界
+                    }
+                    Ks = zyList.get(j);
+                }
+                arrayIndex++;
+            }
+
+            System.out.println(Arrays.toString(ksSjArray));
+            System.out.println(zy_dm);
+            zyList.forEach(t ->{
+                System.out.println(t.getKc_dm() + ","+t.getKs_sj() );
+            });
+            System.out.println(Arrays.toString(counts));
+            System.out.println("------------------");
+        }
+
+    }
+    public int[] arrangeGk(List<TblKs> ksList) {
+        QueryWrapper<GkSj> qw = new QueryWrapper<>();
+        List<GkSj> gkSjList = gkSjMapper.selectList(qw);
+        int[] counts = {0, 0, 0, 0};
+//        将国考对应的时间（代码1，2，3..）添加到考试表里的时间，先把国考的确定了
+        for (int i = 0; i < ksList.size(); i++) {
+            String kc_dm = ksList.get(i).getKc_dm();
+            for (int j = 0; j < gkSjList.size(); j++) {
+                GkSj gk = gkSjList.get(j);
+                if (gk.getKc_dm().compareTo(kc_dm) == 0) {
+                    String ksSj = gk.getKs_sj();
+                    if (ksSj.equals(KcSj.getkssj("1"))) {
+                        ksList.get(i).setKs_sj(1);
+                        break;
+                    }
+                    if (ksSj.equals(KcSj.getkssj("2"))) {
+                        ksList.get(i).setKs_sj(2);
+                        break;
+                    }
+                    if (ksSj.equals(KcSj.getkssj("3"))) {
+                        ksList.get(i).setKs_sj(3);
+                        break;
+                    }
+                    if (ksSj.equals(KcSj.getkssj("4"))) {
+                        ksList.get(i).setKs_sj(4);
+                        break;
+                    }
                 }
             }
         }
-        System.out.println(count);
+//        这段是将国考已经占有的时间塞进计数器里
+        for (int i = 0; i < ksList.size(); i++) {
+            if (ksList.get(i).getKs_sj() != null) {
+                int add = ksList.get(i).getKs_sj() - 1;
+                for (int j = 0; j < counts.length; j++) {
+                    if (add == j) {
+                        counts[j]++;
+                    }
+                }
+            }
+        }
+        return counts;
+    }
+
+    @Test
+    public void test(){
+        arrangeKcService.orderlist();
+        arrangeKcService.orderlistlater();
     }
 }
