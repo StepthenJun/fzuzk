@@ -186,7 +186,6 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
             int min = 0;
 //           可以对相对应专业的课程进行排序了
             for (int j = 0; j < zyList.size(); j++) {
-
                 for (int k = 0; k < counts.length; k++) {
                     min = Arrays.stream(counts).min().getAsInt();
                     if (counts[k] <= min) {
@@ -199,20 +198,25 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
 //            1.单个时间段按照顺序排
             // 3.为专业课程分配时间
             int arrayIndex = 0;
-
             for (int j = 0; j < zyList.size() && arrayIndex < ksSjArray.length; ) {
                 TblKs Ks = zyList.get(j);
                 for (int k = 0; k < ksSjArray[arrayIndex]; k++) {
                     Ks.setKs_sj(arrayIndex + 1);
                     UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
-                    uw.eq("kc_dm",Ks.getKc_dm()).set("ks_sj",arrayIndex + 1);
-                    bzymapper.update(null,uw);
+                    uw.eq("kc_dm",Ks.getKc_dm()).eq("zy_dm",zy_dm);
+                    tblKsMapper.update(Ks,uw);
                     if (++j >= zyList.size()) {
                         break;  // 避免索引越界
                     }
                     Ks = zyList.get(j);
                 }
                 arrayIndex++;
+            }
+            if (zy_dm.equals("540101")){
+                System.out.println(Arrays.toString(ksSjArray));
+                for (TblKs ks : zyList) {
+                    System.out.println(ks.getKc_dm() + "," + ks.getKs_sj());
+                }
             }
         }
     }
@@ -419,8 +423,8 @@ public class ArrangeKcServiceImpl extends ServiceImpl<TblKsMapper, TblKs> implem
                 for (int k = 0; k < ksSjArray[arrayIndex]; k++) {
                     Ks.setKs_sjlater(arrayIndex + 5);
                     UpdateWrapper<TblKs> uw = new UpdateWrapper<>();
-                    uw.eq("kc_dm",Ks.getKc_dm()).set("ks_sjlater",arrayIndex + 5);
-                    bzymapper.update(null,uw);
+                    uw.eq("kc_dm",Ks.getKc_dm()).eq("zy_dm",zy_dm);
+                    tblKsMapper.update(Ks,uw);
                     if (++j >= zyList.size()) {
                         break;  // 避免索引越界
                     }

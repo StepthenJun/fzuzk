@@ -17,6 +17,7 @@ import zk.service.ArrangeKcService;
 import zk.service.GknewService;
 import zk.service.ZyMessageService;
 import zk.util.KcSj;
+import zk.util.Md5Util;
 
 import java.util.*;
 
@@ -255,7 +256,6 @@ class FzuzKprojectApplicationTests {
 
     @Test
     public void test(){
-        arrangeKcService.orderlist();
-        arrangeKcService.orderlistlater();
+        System.out.println(Md5Util.encrypt("Fjzkadmin123456"));
     }
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import zk.dao.UserMapper;
@@ -28,8 +29,7 @@ import java.util.Map;
 public class LoginController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserMapper userMapper;
+
 
 //    @GetMapping("/login")
 //    public Map<String,Object> login(User user){
@@ -53,30 +53,9 @@ public class LoginController {
 //    }
 
     @PostMapping("/login")
-    public String login(@RequestParam("username") String username,
-                        @RequestParam("md5_password") String md5pwd,
-                        @RequestParam("verifyCode") String verifyCode,
-                        HttpSession session) {
-
-        // 验证验证码
-        String captchaCode = session.getAttribute("verifyCode") + "";
-        if (!verifyCode.equals(captchaCode)) {
-            return "验证码错误";
-        }
-
-        // 对密码加盐操作
-        String salt_md5pwd = md5pwd + "zzuli";
-        String final_md5pwd = DigestUtils.md5DigestAsHex(salt_md5pwd.getBytes()); // 最终的 MD5 密码
-
-        User user = new User(username, final_md5pwd);
-
-        // 具体的业务逻辑
-        if (userMapper.selectOne(new QueryWrapper<>(user)) != null) {
-            session.setAttribute("User", username); // 记录 session
-            return "success"; // 跳转登录成功页面
-        } else {
-            return "用户名或者密码错误！";
-        }
+    public ResponseEntity<Result> login(@RequestParam String username, @RequestParam String password, @RequestParam String verifyCode, HttpSession session) {
+        Result result = userService.login(username, password, verifyCode, session);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/common/verify")
@@ -89,38 +68,5 @@ public class LoginController {
         String verifyCode = captcha.getCode();
         request.getSession().setAttribute("verifyCode",verifyCode);
     }
-    @PostMapping("/loginc")
-    public String loginByHutool(@RequestParam("verifyCode") String verifyCode,HttpSession session) {
-        String captchaCode = session.getAttribute("verifyCode") + "";
-        if(verifyCode.equals(captchaCode)){
-            return "success";
-        }
-        return "false";
-    }
-    @PostMapping("/user/login")
-    public String login(@RequestParam("username") String username, //接收从index.html 传参过来 参数：username
-                        @RequestParam("md5_password") String md5pwd //接收的标识是前端的id字段
-                        ,HttpSession session
-    ){
-        String salt_md5pwd=md5pwd+"fzusosd"; //后端加盐操作
 
-        String final_md5pwd= DigestUtils.md5DigestAsHex(salt_md5pwd.getBytes());// 最终的 MD5 密码
-        User user = new User(username,md5pwd);
-        System.out.println(final_md5pwd);
-        //具体的业务
-        if(userMapper.selectOne(new QueryWrapper<>())!=null){  //如果查询结果不为空则用户、密码正确
-            session.setAttribute("loginUser",username); //记录 session
-            return "success";//跳转登录成功页面
-        }
-        else {
-            Result.error( "用户名或者密码错误！");
-        }
-        return "index";
-    }
-/*
-    @PostMapping("/loginnotoken")
-    public Result<String> loginnotoken(User user){
-        String loginnotoken = userService.loginnotoken(user);
-        return Result.success(loginnotoken);
-    }*/
 }

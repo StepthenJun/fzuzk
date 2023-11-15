@@ -1,5 +1,6 @@
 package zk.domain.Login;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,5 +18,7 @@ public class User {
     private String username;
     @ApiModelProperty("登录密码")
     private String password;
+    @TableField(exist = false)
+    private String code;
 //    private String token;
 }

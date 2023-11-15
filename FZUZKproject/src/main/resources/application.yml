@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev
+    active: local
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    url: jdbc:mysql://59.77.134.82:3307/objManage?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false

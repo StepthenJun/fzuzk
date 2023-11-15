@@ -220,7 +220,7 @@ public class ExcelTool {
                 if (morningList != null){
                     for (int a = 0; a < morningList.size(); a++) {
                         String bz = morningList.get(a).getBz();
-                        if (bz.equals("国考")){
+                        if (bz.equals("国考") || bz.equals("特殊")){
                             morning += morningList.get(a).getKc_dm() + morningList.get(a).getKc_mc() + "\n";
                         }
                         else
@@ -230,7 +230,7 @@ public class ExcelTool {
                 if (afternoonList != null){
                     for (int b = 0; b < afternoonList.size(); b++) {
                         String bz = afternoonList.get(b).getBz();
-                        if (bz.equals("国考")){
+                        if (bz.equals("国考")|| bz.equals("特殊")){
                             afternoon += afternoonList.get(b).getKc_dm() + afternoonList.get(b).getKc_mc() + "\n";
                         }
                         else

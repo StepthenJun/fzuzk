@@ -2,8 +2,10 @@ package zk.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import zk.domain.Login.User;
+import zk.domain.Result;
+
+import javax.servlet.http.HttpSession;
 
 public interface UserService {
-    String loginnotoken(User user);
-    User login(User user);
+    Result login(String username, String password, String verifyCode, HttpSession session);
 }
